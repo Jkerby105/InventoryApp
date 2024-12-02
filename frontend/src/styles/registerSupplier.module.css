@@ -1,10 +1,6 @@
-.navBar {
-    font-weight: bold;
-  }
-  
-  .loginCard {
+ .loginCard {
     max-width: 600px;
-    height: 800px;
+    height: 600px;
     margin: 50px auto;
     padding: 30px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -25,33 +21,11 @@
   
   .loginButton {
     width: 100%;
+    margin-top: 80px;
     padding: 10px;
     background-color: #007bff;
     border: none;
     color: white;
   }
   
-  .footer {
-    background-color: #f8f9fa;
-    padding: 20px 0;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-  }
-  
-  .footerText {
-    color: #6c757d;
-    font-size: 14px;
-    margin-bottom: 10px;
-  }
-  
-  .footerLink {
-    color: #007bff;
-    margin: 0 10px;
-    text-decoration: none;
-  }
-  
-  .footerLink:hover {
-    text-decoration: underline;
-  }
   
