@@ -1,12 +1,24 @@
 import express from "express";
 
+import { commonMiddleWare } from "./middleware/common.js";
+import router from "./routes/auth.js";
+import 'dotenv/config.js'
+
 const app = express();
 
 const port = 3000;
 
-app.get("/",(req,res,next) => {
-    res.send("Hello World");
-})
+commonMiddleWare.forEach((mw) => app.use(mw));
+
+app.use("/account",router);
+
+app.use((error, req, res, next) => {
+    const status = error.statusCode || 500;
+    const message = error.message;
+    const data = error.data;
+    res.status(status).json({ message: message, data: data });
+});
+
 
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`)

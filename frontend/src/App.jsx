@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 // -------------------------------- \\
 import { AccountRoot } from "./pages/Account/AccountRoot";
 import { Login } from "./pages/Account/Login";
-import { CreateAccount } from "./pages/Account/CreateAccount";
+import { CreateAccount, action as createAccountAction } from "./pages/Account/CreateAccount";
 import { AboutUs } from "./pages/Account/AboutUs";
 import { ForgetPassword } from "./pages/Account/ForgetPassword";
 // -------------------------------- \\
@@ -35,6 +35,7 @@ function App() {
         element: <AccountRoot />,
       },
       {
+        errorElement: <SomeError/>,
         path: "Login",
         element: <AccountRoot />,
         children: [
@@ -45,6 +46,7 @@ function App() {
           {
             path: "CreateAccount", // Relative path
             element: <CreateAccount />,
+            action: createAccountAction
           },
           {
             path: "ForgotPassword", // Relative path
