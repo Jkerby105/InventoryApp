@@ -3,7 +3,7 @@ import React, { useRef } from "react";
 import styles from "../../styles/createAccount.module.css";
 import { useSubmit, redirect } from "react-router-dom";
 import { Form, Button, Card, Container, Navbar, Nav } from "react-bootstrap";
-import axios from "axios"
+import axios from "axios";
 
 export const CreateAccount = () => {
   const submit = useSubmit();
@@ -112,7 +112,8 @@ export const CreateAccount = () => {
                 ref={role}
               >
                 <option>Admin</option>
-                <option>Supplier</option>
+                <option>Driver</option>
+
               </Form.Control>
             </Form.Group>
 
@@ -138,12 +139,19 @@ export async function action({ request, params }) {
     role: data.get("role"),
   };
 
-  const response = await axios.post("http://localhost:3000/account/create", accountCreation);
+  const response = await axios.post(
+    "http://localhost:3000/account/create",
+    accountCreation
+  );
 
-  if(response.status !== 201){
-    throw new Error("unsuccessful account creation")
+  if (response.status !== 201) {
+    throw new Error("unsuccessful account creation");
   }
 
-   return redirect("/");
+  return redirect("/");
+}
+
+
+export async function loader({request,params}){
 
 }

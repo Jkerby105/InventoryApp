@@ -13,7 +13,8 @@ import { InventoryData } from "./pages/Company/InventoryData";
 import { ViewProducts } from "./pages/Product/ViewProducts";
 import { AddProduct } from "./pages/Product/AddProduct";
 import { AddCategory } from "./pages/Category/AddCategory";
-import { RegisterSupplier } from "./pages/Register/RegisterSupplier";
+import { RegisterSupplier, action as companySupplierAction } from "./pages/Register/RegisterSupplier";
+import {ViewSuppliers, loader as suppliersLoader, action as suppliersAction} from "./pages/Register/ViewSuppliers";
 import { Register } from "./pages/Register/Register";
 import { ViewOrders } from "./pages/Order/ViewOrders";
 import { AssignOrder } from "./pages/Order/AssignOrder";
@@ -67,24 +68,39 @@ function App() {
             element: <InventoryData />,
           },
           {
-            path: "Products",
-            element: <ViewProducts />,
-          },
-          {
-            path: "product",
+            path: "AddProduct",
             element: <AddProduct />,
           },
           {
-            path: "category",
+            path: "ViewProducts",
+            element: <ViewProducts />,
+          },
+          {
+            path: "AddCategory",
             element: <AddCategory />,
           },
           {
-            path: "register",
+            path: "ViewCategories",
+            element: <AddCategory />,
+          },
+          {
+            path: "AddRole",
             element: <Register />,
           },
           {
-            path: "registerSupplier",
+            path: "ViewRole",
+            element: <Register />,
+          },
+          {
+            path: "AddSupplier",
             element: <RegisterSupplier />,
+            action: companySupplierAction
+          },
+          {
+            path: "ViewSuppliers",
+            element: <ViewSuppliers />,
+            loader: suppliersLoader,
+            action: suppliersAction,
           },
           {
             path: "Orders",

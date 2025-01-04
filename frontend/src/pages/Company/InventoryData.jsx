@@ -146,3 +146,13 @@ export const InventoryData = () => {
     </>
   );
 }
+
+
+export async function action({request,params}){
+
+}
+
+
+export async function loader({request,params}){
+
+}

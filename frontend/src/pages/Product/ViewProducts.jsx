@@ -61,3 +61,13 @@ export const ViewProducts = () => {
     </>
   );
 };
+
+
+export async function action({request,params}){
+
+}
+
+
+export async function loader({request,params}){
+
+}

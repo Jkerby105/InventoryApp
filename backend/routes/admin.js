@@ -1,9 +1,11 @@
 import express from "express";
+import { body } from "express-validator";
 import {
   getCategories,
   getDeliveryDrivers,
   getOrders,
   getSuppliers,
+  getSupplier,
   postCategories,
   postDeliveryDrivers,
   postSuppliers,
@@ -14,15 +16,28 @@ import {
   deleteCategories,
   deleteDeliveryDrivers,
   deleteSuppliers,
-} from "../controller/admin";
+} from "../controller/admin.js";
 const router = express.Router();
 
 router.get("/suppliers", getSuppliers);
+router.get("/supplier/:id", getSupplier);
+
 router.get("/categories", getCategories);
+router.get("/category", getCategories);
+
 router.get("/deliveryDrivers", getDeliveryDrivers);
 router.get("/orders", getOrders);
 
-router.post("/addSupplier", [], postSuppliers);
+router.post(
+  "/addSupplier",
+  [
+    body("companyName").trim().notEmpty(),
+    body("companyAddress").trim().notEmpty(),
+    body("companyPhone").trim().notEmpty(),
+    body("companyEmail").trim().notEmpty().isEmail(),
+  ],
+  postSuppliers
+);
 router.post("/addCategory", [], postCategories);
 router.post("/addDeliveryDriver", [], postDeliveryDrivers);
 
