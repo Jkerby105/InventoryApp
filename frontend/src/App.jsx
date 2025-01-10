@@ -12,19 +12,13 @@ import { AdminRoot } from "./pages/Admin/AdminRoot";
 import { InventoryData } from "./pages/Company/InventoryData";
 import { ViewProducts } from "./pages/Product/ViewProducts";
 import { AddProduct } from "./pages/Product/AddProduct";
-import { AddCategory } from "./pages/Category/AddCategory";
+import { AddCategory, action as categoryAction } from "./pages/Category/AddCategory";
 import { RegisterSupplier, action as companySupplierAction } from "./pages/Register/RegisterSupplier";
 import {ViewSuppliers, loader as suppliersLoader, action as suppliersAction} from "./pages/Register/ViewSuppliers";
-import { Register } from "./pages/Register/Register";
 import { ViewOrders } from "./pages/Order/ViewOrders";
 import { AssignOrder } from "./pages/Order/AssignOrder";
 // -------------------------------- \\
-import { UserRoot } from "./pages/User/UserRoot";
-import { UserCart } from "./pages/User/UserCart";
-import { UserCheckout } from "./pages/User/UserCheckout";
-import { UserOrders } from "./pages/User/UserOrders";
-import { UserDashBoard } from "./pages/User/UserDashBoard";
-// -------------------------------- \\
+
 import {SomeError} from "./pages/Error/SomeError"
 
 function App() {
@@ -78,18 +72,12 @@ function App() {
           {
             path: "AddCategory",
             element: <AddCategory />,
+            action: categoryAction
           },
           {
             path: "ViewCategories",
             element: <AddCategory />,
-          },
-          {
-            path: "AddRole",
-            element: <Register />,
-          },
-          {
-            path: "ViewRole",
-            element: <Register />,
+           
           },
           {
             path: "AddSupplier",
@@ -110,28 +98,6 @@ function App() {
             path: "assignOrder",
             element: <AssignOrder />,
           },
-        ],
-      },
-      {
-        path: "dashBoard",
-        element: <UserRoot />,
-        children: [
-          {
-            index: true,
-            element: <UserDashBoard />,
-          },
-          {
-            path: "orders",
-            element: <UserOrders/>
-          },
-          {
-            path: "cart",
-            element: <UserCart/>
-          },
-          {
-            path: "checkout",
-            element: <UserCheckout/>
-          }
         ],
       },
     ],

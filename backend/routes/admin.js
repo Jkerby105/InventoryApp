@@ -38,11 +38,31 @@ router.post(
   ],
   postSuppliers
 );
-router.post("/addCategory", [], postCategories);
+router.post(
+  "/addCategory",
+  [body("category").trim().notEmpty()],
+  postCategories
+);
 router.post("/addDeliveryDriver", [], postDeliveryDrivers);
 
-router.put("/updateSupplier/:id", [], putSuppliers);
-router.put("/updateCategory/:id", [], putCategories);
+router.put(
+  "/updateSupplier/:id",
+  [
+    body("companyName").trim().notEmpty(),
+    body("companyAddress").trim().notEmpty(),
+    body("companyPhone").trim().notEmpty(),
+    body("companyEmail").trim().notEmpty().isEmail(),
+  ],
+  putSuppliers
+);
+router.put(
+  "/updateCategory/:id",
+  [
+    body("category").trim().notEmpty(),
+    body("categoryID").trim().notEmpty().isNumeric(),
+  ],
+  putCategories
+);
 router.put("/updateDeliveryDriver/:id", [], putDeliveryDrivers);
 router.put("/updateOrder/:id", [], putOrders);
 

@@ -5,21 +5,45 @@ import {
   Form,
   Button,
   Card,
-  Container,
-  Navbar,
-  Nav,
-  NavDropdown,
   Col,
   Row,
 } from "react-bootstrap";
+import { useRef } from "react";
+import { useSubmit, redirect } from "react-router-dom";
 
 export const AddProduct = () => {
+
+  const title = useRef();
+  const category = useRef();
+  const supplier = useRef();
+  const description = useRef();
+  const quantity = useRef();
+  const purchasePrice = useRef();
+  const sellingPrice = useRef();
+
+  const imageFile = useRef();
+
+  function productCreation(e){
+    e.preventDefault();
+
+    console.log(title.current.value);
+    console.log(category.current.value);
+    console.log(supplier.current.value);
+    console.log(description.current.value);
+    console.log(quantity.current.value);
+    console.log(purchasePrice.current.value);
+    console.log(sellingPrice.current.value);
+    console.log(imageFile.current.value);
+
+
+  }
+
   return (
     <>
       <Card className={styles.loginCard}>
         <Card.Body>
           <h2 className={styles.loginHeader}>Add Product</h2>
-          <Form>
+          <Form onSubmit={productCreation}>
             <Row>
               <Col>
                 <Form.Group
@@ -29,34 +53,36 @@ export const AddProduct = () => {
                   <Form.Label>Product Title</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Enter First Name"
                     className={styles.formControl}
+                    ref={title}
                   />
                 </Form.Group>
                 <Form.Group controlId="category" className={styles.formGroup}>
                   <Form.Label>Select Category</Form.Label>
-                  <Form.Control as="select">
+                  <Form.Control as="select" ref={category}>
                     <option>1</option>
                     <option>2</option>
                   </Form.Control>
                 </Form.Group>
                 <Form.Group controlId="supplier" className={styles.formGroup}>
                   <Form.Label>Select Supplier</Form.Label>
-                  <Form.Control as="select">
+                  <Form.Control as="select" ref={supplier}>
                     <option>1</option>
                     <option>2</option>
                   </Form.Control>
                 </Form.Group>
+
                 <Form.Group
                   controlId="purchasePrise"
                   className={styles.formGroup}
                 >
-                  <Form.Label>Product Title</Form.Label>
-                  <Form.Control type="number" className={styles.formControl} />
+                  <Form.Label>Purchase Price</Form.Label>
+                  <Form.Control type="text" className={styles.formControl} ref={purchasePrice}/>
                 </Form.Group>
+
                 <Form.Group controlId="formFile" className="mb-3">
-                  <Form.Label>Default file input example</Form.Label>
-                  <Form.Control type="file" />
+                  <Form.Label>Default imageFile input example</Form.Label>
+                  <Form.Control type="file" ref={imageFile}/>
                 </Form.Group>
               </Col>
               <Col>
@@ -72,6 +98,7 @@ export const AddProduct = () => {
                     type="text"
                     placeholder="Enter description"
                     className={styles.formControl}
+                    ref={description}
                   />
                 </Form.Group>
                 <Form.Group
@@ -79,14 +106,14 @@ export const AddProduct = () => {
                   className={styles.formGroup}
                 >
                   <Form.Label>Product Quantity</Form.Label>
-                  <Form.Control type="number" className={styles.formControl} />
+                  <Form.Control type="number" className={styles.formControl} ref={quantity}/>
                 </Form.Group>
                 <Form.Group
                   controlId="productSelling"
                   className={styles.formGroup}
                 >
                   <Form.Label>Product Selling Price</Form.Label>
-                  <Form.Control type="number" className={styles.formControl} />
+                  <Form.Control type="text" className={styles.formControl} ref={sellingPrice}/>
                 </Form.Group>
               </Col>
             </Row>
@@ -99,3 +126,7 @@ export const AddProduct = () => {
     </>
   );
 };
+
+export function action({request,params}){
+
+}

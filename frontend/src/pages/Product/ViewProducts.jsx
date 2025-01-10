@@ -1,14 +1,20 @@
-import React from "react";
+import React ,{useRef} from "react";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "../../styles/Admin/viewProducts.module.css";
 import {
   Card,
 } from "react-bootstrap";
+import Modal from "../../components/modal";
+Modal
 
 export const ViewProducts = () => {
+  const dialog = useRef();
+
+
   return (
     <>
+    <Modal/>
       <Card className={styles.loginCard}>
         <Card.Body>
           <h2 className={styles.loginHeader}>Add Products</h2>
@@ -25,9 +31,9 @@ export const ViewProducts = () => {
                   <th scope="col">Supplier</th>
                   <th scope="col">Available Quantity</th>
                   <th scope="col">Supplied Quantity</th>
-                  <th scope="col">Purchase Price</th>
+                  {/* <th scope="col">Purchase Price</th>
                   <th scope="col">Selling Price</th>
-                  <th scope="col">Profit/Loss</th>
+                  <th scope="col">Profit/Loss</th> */}
                   <th scope="col">Status</th>
                   <th scope="col">Action</th>
                 </tr>
@@ -42,9 +48,9 @@ export const ViewProducts = () => {
                   <td>Supplier Name</td>
                   <td>120</td>
                   <td>200</td>
-                  <td>$50.00</td>
+                  {/* <td>$50.00</td>
                   <td>$75.00</td>
-                  <td>$25.00</td>
+                  <td>$25.00</td> */}
                   <td>
                     <span className="badge bg-success">Active</span>
                   </td>

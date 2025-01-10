@@ -19,35 +19,36 @@ export const AdminNav = () => {
             <Nav.Link href="/login">Inventory Data</Nav.Link>
             {/* <Nav.Link href="/create-account">Create Account</Nav.Link> */}
             <NavDropdown title="Products" id="collapsible-nav-dropdown">
-              <NavDropdown.Item href="#home">Add Product</NavDropdown.Item>
-              <NavDropdown.Item href="#home">
+              <NavDropdown.Item href="/admin/AddProduct">
+                Add Product
+              </NavDropdown.Item>
+              <NavDropdown.Item href="/admin/viewProducts">
                 View All Products
               </NavDropdown.Item>
             </NavDropdown>
             <NavDropdown title="Register" id="collapsible-nav-dropdown">
-              <NavDropdown.Item href="#home">
+              <NavDropdown.Item href="/admin/AddSupplier">
                 Register Supplier
               </NavDropdown.Item>
-              <NavDropdown.Item href="#home">View Suppliers</NavDropdown.Item>
+              <NavDropdown.Item href="/admin/ViewSuppliers">
+                View Suppliers
+              </NavDropdown.Item>
               <hr />
 
-              <NavDropdown.Item href="#home">
-              Role Registration
+              <NavDropdown.Item href="/admin/AddRole">
+                Add Admin
               </NavDropdown.Item>
-              <NavDropdown.Item href="#home">View Roles</NavDropdown.Item>
-              
+              <NavDropdown.Item href="/admin/ViewRole">View All Admin</NavDropdown.Item>
             </NavDropdown>
             <NavDropdown title="Category" id="collapsible-nav-dropdown">
-              <Nav.Link href="/create-account">Add Category</Nav.Link>
-              <Nav.Link href="/create-account">View Categories</Nav.Link>
+              <Nav.Link href="/admin/AddCategory">Add & View Category</Nav.Link>
             </NavDropdown>
             <NavDropdown title="Order" id="collapsible-nav-dropdown">
-              <NavDropdown.Item href="#home">
+              <NavDropdown.Item href="/admin/Orders">
                 Assign Order Delivery
               </NavDropdown.Item>
-              <NavDropdown.Item href="#home">View All Orders</NavDropdown.Item>
+              <NavDropdown.Item href="/admin/assignOrder">View All Orders</NavDropdown.Item>
             </NavDropdown>
-
 
             <Nav.Link href="/create-account">Logout</Nav.Link>
           </Nav>

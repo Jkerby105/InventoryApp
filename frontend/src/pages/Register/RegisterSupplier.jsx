@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, Children } from "react";
 import axios from "axios";
 
 import styles from "../../styles/registerSupplier.module.css";
@@ -25,7 +25,7 @@ export const RegisterSupplier = () => {
     formData.append("phone", phone.current.value);
     formData.append("address", address.current.value);
     formData.append("email", email.current.value);
-    formData.append("update", update.get("supplier"));
+    formData.append("supplierID", update.get("supplier"));
 
     submit(formData, { method: "POST" });
   }
@@ -33,9 +33,9 @@ export const RegisterSupplier = () => {
   useEffect(() => {
     async function getSupplier() {
       try {
-        const supplier = update.get("supplier");
+        const supplierId = update.get("supplier");
         const response = await axios.get(
-          "http://localhost:3000/admin/supplier/" + supplier
+          "http://localhost:3000/admin/supplier/" + supplierId
         );
 
         // if (response.status !== 201) {
@@ -45,11 +45,16 @@ export const RegisterSupplier = () => {
         if (response.data.data.length > 0) setSuppliers(response.data.data[0]);
         else setSuppliers(null);
       } catch (error) {
-        throw new Error("unsuccessful company creation");
+        throw new Error("Could not retrieve company");
       }
     }
 
-    if (update !== null) {
+    const isUpdate = update.get("update");
+    console.log(typeof isUpdate);
+    console.log(isUpdate === "true");
+    console.log(isUpdate instanceof String);
+
+    if (isUpdate === "true") {
       getSupplier();
     }
   }, [update]);
@@ -152,17 +157,22 @@ export const RegisterSupplier = () => {
 
 export async function action({ request, params }) {
   const data = await request.formData();
-  const value = data.get("update");
+  const value = data.get("supplierID");
   console.log(value);
-  console.log(typeof(value));
+  console.log(typeof value);
   let val = value.localeCompare("null");
-  console.log(val)
-  console.log(typeof(val));
+  console.log(val);
+  console.log(typeof val);
 
-  if(val > 0 || val < 0){
+  let updateStatus = false;
+
+  if (val > 0 || val < 0) {
     console.log("true");
+    updateStatus = true;
   }
-  
+
+  console.log("Is update " + updateStatus);
+
   const companyCreation = {
     companyName: data.get("name"),
     companyAddress: data.get("address"),
@@ -170,14 +180,29 @@ export async function action({ request, params }) {
     companyEmail: data.get("email"),
   };
 
-  // const response = await axios.post(
-  //   "http://localhost:3000/admin/addSupplier",
-  //   companyCreation
-  // );
+  console.log(companyCreation);
+  let response;
 
-  // if (response.status !== 201) {
-  //   throw new Error("unsuccessful company creation");
-  // }
+  if (updateStatus) {
+    console.log("--------------------------------------")
+    console.log("Update");
+    console.log(value);
+    console.log(companyCreation)
+    response = await axios.put(
+      "http://localhost:3000/admin/updateSupplier/ " + value,
+      companyCreation
+    );
+  } else {
+    console.log("New");
+    response = await axios.post(
+      "http://localhost:3000/admin/addSupplier",
+      companyCreation
+    );
+  }
+
+  if (response.status !== 201) {
+    throw new Error("unsuccessful company creation");
+  }
 
   return redirect("/");
 }

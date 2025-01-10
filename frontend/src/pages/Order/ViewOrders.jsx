@@ -25,23 +25,19 @@ export const ViewOrders = () => {
             <table className="table table-hover table-striped">
               <thead className="table-light">
                 <tr>
-                  <th scope="col">Order Id</th>
                   <th scope="col">Product</th>
                   <th scope="col">Name</th>
-                  <th scope="col">Description</th>
-                  <th scope="col">Total Price</th>
-                  <th scope="col">Customer Name</th>
+                  <th scope="col">Organization</th>
                   <th scope="col">Address</th>
+                  <th scope="col">Phone</th>
                   <th scope="col">Order Date</th>
                   <th scope="col">Delivery Date</th>
                   <th scope="col">Delivery Status</th>
                   <th scope="col">Delivery Person</th>
-                  <th scope="col">Delivery Mobile</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>001</td>
                   <td>
                     <img
                       src="path/to/product-image.jpg"
@@ -55,17 +51,15 @@ export const ViewOrders = () => {
                   </td>
                   <td>Product Name</td>
                   <td>Product Description</td>
-                  <td>$150.00</td>
-                  <td>John Doe</td>
                   <td>123 Main St, City, State</td>
+                  <td>000-000-0000</td>
                   <td>2024-11-13</td>
                   <td>2024-11-20</td>
                   <td>
                     <span className="badge bg-warning">Pending</span>
                     {/* Use 'bg-success' for delivered and 'bg-danger' for canceled */}
                   </td>
-                  <td>Jane Smith</td>
-                  <td>(555) 123-4567</td>
+                  <td>UPS</td>
                 </tr>
               </tbody>
             </table>
