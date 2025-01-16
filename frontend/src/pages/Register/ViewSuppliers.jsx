@@ -115,10 +115,9 @@ export async function action({ request, params }) {
 }
 
 export async function loader({ request, params }) {
-  console.log("first");
 
   const response = await axios.get("http://localhost:3000/admin/suppliers");
-  // console.log(response);
+
 
   if (response.status !== 201) {
     throw new Error("unsuccessful company creation");

@@ -1,23 +1,45 @@
-import React ,{useRef} from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "../../styles/Admin/viewProducts.module.css";
-import {
-  Card,
-} from "react-bootstrap";
+import { Card, Button } from "react-bootstrap";
 import Modal from "../../components/modal";
-Modal
+import axios from "axios";
+import {
+  redirect,
+  useLoaderData,
+  useNavigate,
+  useSubmit,
+} from "react-router-dom";
+Modal;
 
 export const ViewProducts = () => {
+  const submit = useSubmit();
   const dialog = useRef();
+  const data = useLoaderData();
+  console.log(data.data);
+  const [products, setProducts] = useState(data.data);
+  const [productID, setProductID] = useState(null);
 
+  function deleteProduct(e) {
+    e.preventDefault();
+    const formData = new FormData();
+
+    formData.append("productID", productID);
+    submit(formData, { method: "DELETE" });
+  }
+
+  function handleDelete(id) {
+    setProductID(id);
+    dialog.current.open();
+  }
 
   return (
     <>
-    <Modal/>
+      <Modal ref={dialog} removeItem={deleteProduct} />
       <Card className={styles.loginCard}>
         <Card.Body>
-          <h2 className={styles.loginHeader}>Add Products</h2>
+          <h2 className={styles.loginHeader}>All Products</h2>
           <hr />
           <div className="table-responsive">
             <table className="table table-hover table-striped">
@@ -30,35 +52,62 @@ export const ViewProducts = () => {
                   <th scope="col">Category</th>
                   <th scope="col">Supplier</th>
                   <th scope="col">Available Quantity</th>
-                  <th scope="col">Supplied Quantity</th>
-                  {/* <th scope="col">Purchase Price</th>
-                  <th scope="col">Selling Price</th>
-                  <th scope="col">Profit/Loss</th> */}
                   <th scope="col">Status</th>
-                  <th scope="col">Action</th>
+                  <th scope="col">Update</th>
+                  <th scope="col">Delete</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td>image</td>
-                  <td>Product Name</td>
-                  <td>Short description of the product.</td>
-                  <td>Category Name</td>
-                  <td>Supplier Name</td>
-                  <td>120</td>
-                  <td>200</td>
-                  {/* <td>$50.00</td>
-                  <td>$75.00</td>
-                  <td>$25.00</td> */}
-                  <td>
-                    <span className="badge bg-success">Active</span>
-                  </td>
-                  <td>
-                    <button className="btn btn-sm btn-primary">Update</button>
-                    <button className="btn btn-sm btn-danger">Delete</button>
-                  </td>
-                </tr>
+                {products.map((product, index) => (
+                  <tr key={product.idProduct}>
+                    <th scope="row">{index + 1}</th>
+                    <td>
+                      {product.productImage ? (
+                        <img
+                          src={product.productImage}
+                          alt={product.Title}
+                          style={{ width: "100px", height: "auto" }}
+                        />
+                      ) : (
+                        "No Image"
+                      )}
+                    </td>
+                    <td>{product.Title}</td>
+                    <td>{product.Description}</td>
+                    <td>{product.subCategory}</td>
+                    <td>{product.Supplier_idSupplier}</td>
+                    <td>{product.productQuantity}</td>
+                    <td>
+                      <span
+                        className={`badge bg-${
+                          product.active ? "success" : "danger"
+                        }`}
+                      >
+                        {product.active ? "Active" : "Inactive"}
+                      </span>
+                    </td>
+                    <td>
+                      <Button
+                        className="btn btn-sm btn-primary"
+                        onClick={() => {
+                          navigate(
+                            `/admin/AddProduct/?update=true&supplier=${product.idProduct}`
+                          );
+                        }}
+                      >
+                        Update
+                      </Button>
+                    </td>
+                    <td>
+                      <Button
+                        className="btn btn-sm btn-danger"
+                        onClick={() => handleDelete(product.idProduct)}
+                      >
+                        Delete
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
@@ -68,12 +117,26 @@ export const ViewProducts = () => {
   );
 };
 
+export async function action({ request, params }) {
+  const data = await request.formData();
+  const productID = data.get("productID");
+  const response = await axios.delete(
+    "http://localhost:3000/admin/product/ " + productID
+  );
 
-export async function action({request,params}){
+  if (response.status !== 201) {
+    throw new Error("unsuccessful company creation");
+  }
 
+  return redirect("/admin");
 }
 
+export async function loader({ request, params }) {
+  const response = await axios.get("http://localhost:3000/admin/products");
+  // console.log(response.data);
+  if (response.status !== 201) {
+    throw new Error("unsuccessful company creation");
+  }
 
-export async function loader({request,params}){
-
+  return response.data;
 }

@@ -44,7 +44,6 @@ export const AddCategory = () => {
   }
 
   function deleteCategory(e){
-    // console.log("remove");
     e.preventDefault();
     const formData = new FormData();
     formData.append("categoryID", categoryID);

@@ -10,10 +10,10 @@ import { ForgetPassword } from "./pages/Account/ForgetPassword";
 // -------------------------------- \\
 import { AdminRoot } from "./pages/Admin/AdminRoot";
 import { InventoryData } from "./pages/Company/InventoryData";
-import { ViewProducts } from "./pages/Product/ViewProducts";
-import { AddProduct } from "./pages/Product/AddProduct";
+import { ViewProducts, loader as viewProductLoader, action as productRemoveAction } from "./pages/Product/ViewProducts";
+import { AddProduct, loader as productsLoader, action as productAction } from "./pages/Product/AddProduct";
 import { AddCategory, action as categoryAction } from "./pages/Category/AddCategory";
-import { RegisterSupplier, action as companySupplierAction } from "./pages/Register/RegisterSupplier";
+import { RegisterSupplier } from "./pages/Register/RegisterSupplier";
 import {ViewSuppliers, loader as suppliersLoader, action as suppliersAction} from "./pages/Register/ViewSuppliers";
 import { ViewOrders } from "./pages/Order/ViewOrders";
 import { AssignOrder } from "./pages/Order/AssignOrder";
@@ -64,10 +64,14 @@ function App() {
           {
             path: "AddProduct",
             element: <AddProduct />,
+            loader: productsLoader,
+            action: productAction
           },
           {
             path: "ViewProducts",
             element: <ViewProducts />,
+            loader: viewProductLoader,
+            action: productRemoveAction
           },
           {
             path: "AddCategory",
@@ -82,7 +86,6 @@ function App() {
           {
             path: "AddSupplier",
             element: <RegisterSupplier />,
-            action: companySupplierAction
           },
           {
             path: "ViewSuppliers",

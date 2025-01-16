@@ -1,32 +1,42 @@
 import express from "express";
 import { body } from "express-validator";
+
 import {
   getCategories,
-  getDeliveryDrivers,
   getOrders,
   getSuppliers,
   getSupplier,
+  getSupplierCategories,
+  getProducts,
+  getProduct,
   postCategories,
-  postDeliveryDrivers,
   postSuppliers,
+  postProduct,
   putCategories,
-  putDeliveryDrivers,
   putOrders,
   putSuppliers,
+  putProduct,
   deleteCategories,
-  deleteDeliveryDrivers,
   deleteSuppliers,
+  deleteProduct,
+  postOrder,
 } from "../controller/admin.js";
 const router = express.Router();
 
+// GET
+
 router.get("/suppliers", getSuppliers);
 router.get("/supplier/:id", getSupplier);
-
 router.get("/categories", getCategories);
 router.get("/category", getCategories);
-
-router.get("/deliveryDrivers", getDeliveryDrivers);
 router.get("/orders", getOrders);
+router.get("/SuppliersCategories", getSupplierCategories);
+router.get("/products",getProducts);
+router.get("/product/:id",getProduct);
+
+
+
+// POST
 
 router.post(
   "/addSupplier",
@@ -43,7 +53,20 @@ router.post(
   [body("category").trim().notEmpty()],
   postCategories
 );
-router.post("/addDeliveryDriver", [], postDeliveryDrivers);
+router.post(
+  "/addProduct",
+  [
+    body("Title").trim().notEmpty().isAlpha(),
+    body("Description").trim().notEmpty().isAlpha(),
+    body("suppliedQuantity").trim().notEmpty().isNumeric(),
+    body("Supplier").trim().notEmpty().isAlpha(),
+    body("Category").trim().notEmpty().isAlpha(),
+  ],
+  postProduct
+);
+router.post("/addOrder", [], postOrder);
+
+// PUT
 
 router.put(
   "/updateSupplier/:id",
@@ -63,12 +86,14 @@ router.put(
   ],
   putCategories
 );
-router.put("/updateDeliveryDriver/:id", [], putDeliveryDrivers);
-router.put("/updateOrder/:id", [], putOrders);
+router.put("/updateProduct/:id", [], putProduct);
+
+// DELETE
 
 router.delete("/supplier/:id", deleteSuppliers);
 router.delete("/category/:id", deleteCategories);
-router.delete("/deliveryDriver/:id", deleteDeliveryDrivers);
+router.delete("/product/:id", deleteProduct);
+
 // router.delete("/order",[]);
 
 export default router;
