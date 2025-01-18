@@ -48,7 +48,30 @@ export async function getCategories(req, res, next) {
 
 export async function getOrders(req, res, next) {
   try {
-    // ...
+
+    const [result, fields] = await pool.query(`
+      SELECT 
+        Orders.*, 
+        Product.productImage
+      FROM 
+        Orders
+      JOIN 
+        Product 
+      ON 
+        Orders.Product_productID = Product.idProduct
+    `);
+    
+    // Format the result to include the base64 image
+    const formattedResult = result.map((order) => ({
+      ...order,
+      productImage: order.productImage
+        ? `data:image/png;base64,${order.productImage.toString("base64")}`
+        : null,
+    }));
+    
+    
+    res.status(201).json({ data: formattedResult });
+    
   } catch (error) {
     error.statusCode = 422;
     error.message = "server error";
@@ -176,21 +199,16 @@ export async function postProduct(req, res, next) {
   console.log("hello here ");
 
   try {
-    // Validate the incoming request data
     validator(req);
 
-    // Extract fields from the request body
     const Title = req.body.Title;
     const Description = req.body.Description;
-    const productImage = req.file.buffer; // Assuming the image is in the request
+    const productImage = req.file.buffer; 
     console.log(productImage);
-    // const base64String = productImage.toString('base64');
-    // console.log(base64String)
     const productQuantity = req.body.suppliedQuantity;
     const Supplier = req.body.Supplier;
     const Category = req.body.Category;
 
-    // Query to get the Supplier and Category IDs based on the provided names
     const supplierId = await pool.query(
       "SELECT idSupplier FROM Supplier WHERE companyName = ?",
       [Supplier]
@@ -200,8 +218,7 @@ export async function postProduct(req, res, next) {
       [Category]
     );
 
-    // Insert the new product, relying on the default values for createdAt and updatedAt
-    const response = await pool.query(
+       await pool.query(
       "INSERT INTO `Product` (`Title`, `Description`, `productImage`, `productQuantity`, `Supplier_idSupplier`, `subCategory`) VALUES (?, ?, ?, ?, ?, ?)",
       [
         Title,
@@ -213,7 +230,7 @@ export async function postProduct(req, res, next) {
       ]
     );
 
-    console.log(response);
+   
     // Respond with a success message
     res.status(201).json({ message: "Product successfully created" });
   } catch (error) {
@@ -227,8 +244,23 @@ export async function postProduct(req, res, next) {
 export async function postOrder(req, res, next) {
   validator(req);
 
+  console.log("hello From post controller")
+
   try {
-    // ...
+  
+      const organizationName = req.body.organizationName;
+      const organizationEmail = req.body.organizationEmail;
+      const organizationAddress = req.body.organizationAddress;
+      const organizationNumber = req.body.organizationNumber
+      const productID = req.body.selectedProduct;
+      const productQuantity = req.body. productAmount
+
+      await pool.query("INSERT INTO `Orders` (`deliveryDate`,`totalQuantity`,`organizationName`, `organizationAddress`, `organizationEmail`, `organizationNumber`, `Product_productID`) VALUES(?,?,?,?,?,?,?)",[null,productQuantity,organizationName,organizationAddress,organizationEmail,organizationNumber,productID]);
+
+    
+      // Respond with a success message
+       res.status(201).json({ message: "Order successfully created" });
+
   } catch (error) {
     error.statusCode = 422;
     error.message = "server error";
@@ -281,21 +313,26 @@ export async function putCategories(req, res, next) {
 }
 
 export async function putProduct(req, res, next) {
+  console.log("update")
   console.log("hello here ");
+  console.log(req.body.Title)
 
   const productID = req.params.id;
 
   try {
-    validator(req);
+    // validator(req);
 
     const Title = req.body.Title;
     const Description = req.body.Description;
-    const productImage = req.file.buffer;
     const productQuantity = req.body.suppliedQuantity;
+    let productImage = null;
+    if(req.file){
+     productImage = req.file.buffer;
+    }
     const Supplier = req.body.Supplier;
     const Category = req.body.Category;
 
-    // Query to get the Supplier and Category IDs based on the provided names
+    
     const supplierId = await pool.query(
       "SELECT idSupplier FROM Supplier WHERE companyName = ?",
       [Supplier]
@@ -305,27 +342,34 @@ export async function putProduct(req, res, next) {
       [Category]
     );
 
-    console.log(Title);
-    console.log(Description)
-    console.log(productQuantity)
-    console.log(supplierId)
-    console.log(categoryID)
-    console.log(productImage)
+    if(productImage){
+       await pool.query(
+        "UPDATE `Product` SET `Title` = ?, `Description` = ?, `productImage` = ?, `productQuantity` = ?, `Supplier_idSupplier` = ?, `subCategory` = ? WHERE `idProduct` = ?",
+        [
+          Title,
+          Description,
+          productImage,
+          productQuantity,
+          supplierId[0][0].idSupplier,
+          categoryID[0][0].idCategory,
+          productID, 
+        ]
+      );
 
-    // Insert the new product, relying on the default values for createdAt and updatedAt
-        await pool.query(
-      "UPDATE `Product` SET `Title` = ?, `Description` = ?, `productImage` = ?, `productQuantity` = ?, `Supplier_idSupplier` = ?, `subCategory` = ? WHERE `idProduct` = ?",
-      [
-        Title,
-        Description,
-        productImage,
-        productQuantity,
-        supplierId[0][0].idSupplier,
-        categoryID[0][0].idCategory,
-        productID, // This is the condition to update the specific product
-      ]
-    );
-    
+    }else{
+      await pool.query(
+        "UPDATE `Product` SET `Title` = ?, `Description` = ?, `productQuantity` = ?, `Supplier_idSupplier` = ?, `subCategory` = ? WHERE `idProduct` = ?",
+        [
+          Title,
+          Description,
+          productQuantity,
+          supplierId[0][0].idSupplier,
+          categoryID[0][0].idCategory,
+          productID, 
+        ]
+      );
+    }
+
     res.status(201).json({ message: "Product successfully updated" });
   } catch (error) {
     // Handle errors

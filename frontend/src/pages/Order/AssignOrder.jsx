@@ -1,7 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-import "bootstrap/dist/css/bootstrap.min.css";
-import styles from "../../styles/Admin/viewProducts.module.css";
+// import "bootstrap/dist/css/bootstrap.min.css";
+// import styles from "../../styles/Admin/viewProducts.module.css";
+import styles from "../../styles/registerSupplier.module.css";
+import {
+  useSearchParams,
+  useNavigate,
+  redirect,
+  useLoaderData,
+} from "react-router-dom";
+
 import {
   Form,
   Button,
@@ -13,113 +22,163 @@ import {
   Col,
   Row,
 } from "react-bootstrap";
+import { useRef } from "react";
 
 export const AssignOrder = () => {
+  const [selectedProductId, setSelectedProductId] = useState("");
+  const [maxQuantity, setMaxQuantity] = useState(null);
+
+  const organizationName = useRef();
+  const organizationAddress = useRef();
+  const organizationEmail = useRef();
+  const organizationNumber = useRef();
+  const selectedAmount = useRef();
+
+  const products = useLoaderData();
+  console.log(products);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    console.log(selectedProductId);
+    console.log(selectedAmount.current.value)
+
+    const formData ={
+      organizationName: organizationName.current.value,
+      organizationEmail: organizationEmail.current.value,
+      organizationAddress: organizationAddress.current.value,
+      organizationNumber: organizationNumber.current.value,
+      selectedProduct: selectedProductId,
+      productAmount: selectedAmount.current.value
+      }
+
+          try {
+              await axios.post(
+                `http://localhost:3000/admin/addOrder`,
+                formData
+              );
+
+            navigate("/");
+          } catch (err) {
+            setError("Failed to save supplier details.");
+          }
+
+  }
+
+  const handleProductChange = (e) => {
+    console.log("change")
+    const selectedTitle = e.target.value;
+    const product = products.find((product) => product.Title === selectedTitle);
+
+    if (product) {
+      console.log(product)
+      setSelectedProductId(product.idProduct);
+      setMaxQuantity(product.productQuantity); 
+    } else {
+      setMaxQuantity(null); 
+    }
+  };
+
   return (
     <>
       <Card className={styles.loginCard}>
-        <div className="container mt-3">
-          <div className="d-flex justify-content-center">
-            <input
-              type="text"
-              className="form-control me-2"
-              placeholder="Search..."
-              style={{ maxWidth: "400px" }}
-            />
-            <button className="btn btn-primary" type="button">
-              Search
-            </button>
-          </div>
-        </div>
-
         <Card.Body>
-          <h2 className={styles.loginHeader}>Search Customer Order</h2>
-          <hr />
-          <div className="table-responsive">
-            <table className="table table-hover table-striped">
-              <thead className="table-light">
-                <tr>
-                  <th scope="col">Order Id</th>
-                  <th scope="col">Product</th>
-                  <th scope="col">Name</th>
-                  <th scope="col">Description</th>
-                  <th scope="col">Total Price</th>
-                  <th scope="col">Customer Name</th>
-                  <th scope="col">Address</th>
-                  <th scope="col">Order Date</th>
-                  <th scope="col">Delivery Date</th>
-                  <th scope="col">Delivery Status</th>
-                  <th scope="col">Delivery Person</th>
-                  <th scope="col">Delivery Mobile</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>001</td>
-                  <td>
-                    <img
-                      src="path/to/product-image.jpg"
-                      alt="Product Image"
-                      style={{
-                        width: "50px",
-                        height: "auto",
-                        borderRadius: "4px",
-                      }}
-                    />
-                  </td>
-                  <td>Product Name</td>
-                  <td>Product Description</td>
-                  <td>$150.00</td>
-                  <td>John Doe</td>
-                  <td>123 Main St, City, State</td>
-                  <td>2024-11-13</td>
-                  <td>2024-11-20</td>
-                  <td>
-                    <span className="badge bg-warning">Pending</span>
-                    {/* Use 'bg-success' for delivered and 'bg-danger' for canceled */}
-                  </td>
-                  <td>Jane Smith</td>
-                  <td>(555) 123-4567</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <h2 className={styles.loginHeader}>Assign Order</h2>
+          <Form onSubmit={handleSubmit}>
+            <Row>
+              <Col>
+                <Form.Group
+                  controlId="companyName"
+                  className={styles.formGroup}
+                >
+                  <Form.Label>Company Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="name"
+                    ref={organizationName}
+                    placeholder="Enter company name"
+                    required
+                  />
+                </Form.Group>
+                <Form.Group controlId="email" className={styles.formGroup}>
+                  <Form.Label>Company Email</Form.Label>
+                  <Form.Control
+                    type="email"
+                    name="email"
+                    ref={organizationEmail}
+                    placeholder="Enter company email"
+                    required
+                  />
+                </Form.Group>
+
+                <Form.Group controlId="product" className={styles.formGroup}>
+                  <Form.Label>Select Product</Form.Label>
+                  <Form.Control as="select" onChange={handleProductChange}>
+                    <option value="">Select a product</option>
+                    {products.map((product) => (
+                      <option key={product.idProduct} value={product.Title}>
+                        {product.Title}
+                      </option>
+                    ))}
+                  </Form.Control>
+                </Form.Group>
+
+
+              </Col>
+              <Col>
+                <Form.Group controlId="address" className={styles.formGroup}>
+                  <Form.Label>Organization Address</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="address"
+                    ref={organizationAddress}
+                    placeholder="Enter company address"
+                    required
+                  />
+                </Form.Group>
+                <Form.Group controlId="phone" className={styles.formGroup}>
+                  <Form.Label>Organization Phone Number</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="phone"
+                    ref={organizationNumber}
+                    placeholder="Enter company phone"
+                    required
+                  />
+                </Form.Group>
+
+                <Form.Group
+                  controlId="productQuantity"
+                  className={styles.formGroup}
+                >
+                  <Form.Label>Product Quantity</Form.Label>
+                  <Form.Control
+                    type="number"
+                    max={maxQuantity || ""}
+                    min={0}
+                    className={styles.formControl}
+                    ref={selectedAmount}
+                    disabled={!maxQuantity}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Button type="submit" className={styles.loginButton}>
+              Send Order
+            </Button>
+          </Form>
         </Card.Body>
       </Card>
-
-      <Container className={styles.formContainer}>
-        <h2 className={styles.formHeader}>Assign Delivery</h2>
-        <Form className="d-flex align-items-center">
-          <Form.Group
-            controlId="orderId"
-            className={`${styles.formGroup} me-3`}
-          >
-            <Form.Label>Order ID</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter Order ID"
-              className={styles.formControl}
-            />
-          </Form.Group>
-
-          <Form.Group
-            controlId="deliveryPerson"
-            className={`${styles.formGroup} me-3`}
-          >
-            <Form.Label>Delivery Person</Form.Label>
-            <Form.Control as="select" className={styles.formControl}>
-              <option>Select Delivery Person</option>
-              <option>John Doe</option>
-              <option>Jane Smith</option>
-              <option>Alex Johnson</option>
-            </Form.Control>
-          </Form.Group>
-
-          <Button type="submit" className={styles.submitButton}>
-            Submit
-          </Button>
-        </Form>
-      </Container>
     </>
   );
 };
+
+export async function loader({ request, params }) {
+  const response = await axios.get("http://localhost:3000/admin/products/");
+
+  if (response.status !== 201) {
+    throw new Error("unsuccessful company creation");
+  }
+
+  return response.data.data;
+}

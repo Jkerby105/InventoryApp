@@ -2,6 +2,10 @@ import React from "react";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "../../styles/Admin/viewProducts.module.css";
+import { redirect, useLoaderData, useNavigate, useSubmit } from "react-router-dom";
+import axios from "axios";
+
+
 import {
   Form,
   Button,
@@ -15,6 +19,10 @@ import {
 } from "react-bootstrap";
 
 export const ViewOrders = () => {
+
+  const ordersList = useLoaderData();
+  
+
   return (
     <>
       <Card className={styles.loginCard}>
@@ -27,40 +35,42 @@ export const ViewOrders = () => {
                 <tr>
                   <th scope="col">Product</th>
                   <th scope="col">Name</th>
-                  <th scope="col">Organization</th>
+                  <th scope="col">Image</th>
+                  <th scope="col">Quantity</th>
                   <th scope="col">Address</th>
+                  <th scope="col">Email</th>
                   <th scope="col">Phone</th>
-                  <th scope="col">Order Date</th>
+                  <th scope="col">Order Created</th>
                   <th scope="col">Delivery Date</th>
-                  <th scope="col">Delivery Status</th>
-                  <th scope="col">Delivery Person</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>
-                    <img
-                      src="path/to/product-image.jpg"
-                      alt="Product Image"
-                      style={{
-                        width: "50px",
-                        height: "auto",
-                        borderRadius: "4px",
-                      }}
-                    />
-                  </td>
-                  <td>Product Name</td>
-                  <td>Product Description</td>
-                  <td>123 Main St, City, State</td>
-                  <td>000-000-0000</td>
-                  <td>2024-11-13</td>
-                  <td>2024-11-20</td>
-                  <td>
-                    <span className="badge bg-warning">Pending</span>
-                    {/* Use 'bg-success' for delivered and 'bg-danger' for canceled */}
-                  </td>
-                  <td>UPS</td>
-                </tr>
+                                {ordersList.map((order, index) => (
+                                  <tr key={order.idProduct}>
+                                    <th scope="row">{index + 1}</th>
+                                   <td scope="col">{order.organizationName}</td>
+
+                                    <td>
+                                      {order.productImage ? (
+                                        <img
+                                          src={order.productImage}
+                                          alt={order.Title}
+                                          style={{ width: "100px", height: "auto" }}
+                                        />
+                                      ) : (
+                                        "No Image"
+                                      )}
+                                    </td>
+                                    <td>{order.totalQuantity}</td>
+                                    <td>{order.organizationAddress}</td>
+                                    <td>{order.organizationEmail}</td>
+                                    <td>{order.organizationNumber}</td>
+                                    <td>{order.createdAt}</td>
+                                    <td>{order.deliveryDate?order.deliveryDate:"Not Yet Delivered"}</td>
+                                  </tr>
+                                ))}
+
+
               </tbody>
             </table>
           </div>
@@ -70,11 +80,39 @@ export const ViewOrders = () => {
   );
 };
 
-export async function action({request,params}){
-
-}
 
 
-export async function loader({request,params}){
 
+export async function loader({ request, params }) {
+
+  console.log("loader")
+
+  const response = await axios.get("http://localhost:3000/admin/orders");
+  console.log("loader")
+  console.log(response)
+
+  if (response.status !== 201) {
+    throw new Error("unsuccessful company creation");
+  }
+
+  const formatResult = response.data.data.map((order) => {
+      const date = new Date(order.createdAt);
+      const formattedDate = date.toLocaleDateString("en-US", {
+        year: "2-digit",
+        month: "2-digit",
+        day: "2-digit"
+      });
+
+      const formattedNumber = order.organizationNumber? `${order.organizationNumber.slice(0, 3)}-${order.organizationNumber.slice(3, 6)}-${order.organizationNumber.slice(6)}`
+      : null;
+
+      return{
+        ...order,
+        createdAt: formattedDate,
+        organizationNumber: formattedNumber,
+      }
+
+  })
+
+  return formatResult;
 }

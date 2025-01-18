@@ -16,9 +16,7 @@ Modal;
 export const ViewProducts = () => {
   const submit = useSubmit();
   const dialog = useRef();
-  const data = useLoaderData();
-  console.log(data.data);
-  const [products, setProducts] = useState(data.data);
+  const products = useLoaderData().data;
   const [productID, setProductID] = useState(null);
 
   function deleteProduct(e) {

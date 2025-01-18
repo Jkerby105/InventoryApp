@@ -15,8 +15,8 @@ import { AddProduct, loader as productsLoader, action as productAction } from ".
 import { AddCategory, action as categoryAction } from "./pages/Category/AddCategory";
 import { RegisterSupplier } from "./pages/Register/RegisterSupplier";
 import {ViewSuppliers, loader as suppliersLoader, action as suppliersAction} from "./pages/Register/ViewSuppliers";
-import { ViewOrders } from "./pages/Order/ViewOrders";
-import { AssignOrder } from "./pages/Order/AssignOrder";
+import { ViewOrders, loader as ordersLoader } from "./pages/Order/ViewOrders";
+import { AssignOrder, loader as productLoader } from "./pages/Order/AssignOrder";
 // -------------------------------- \\
 
 import {SomeError} from "./pages/Error/SomeError"
@@ -96,10 +96,12 @@ function App() {
           {
             path: "Orders",
             element: <ViewOrders />,
+            loader: ordersLoader
           },
           {
             path: "assignOrder",
             element: <AssignOrder />,
+            loader: productLoader
           },
         ],
       },

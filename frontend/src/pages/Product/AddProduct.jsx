@@ -49,7 +49,6 @@ export const AddProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const productImage = imageFile.current.files[0];
     const formData = new FormData();
     formData.append("Title", title.current.value);
     formData.append("Description", description.current.value);
@@ -63,7 +62,7 @@ export const AddProduct = () => {
     try {
       if (isUpdate) {
 
-        console.log(formData)
+        console.log(formData.get("productImage"));
 
         await axios.put(
           `http://localhost:3000/admin/updateProduct/${productId}`,
@@ -201,6 +200,8 @@ export const AddProduct = () => {
                   <Form.Control
                     type="number"
                     className={styles.formControl}
+                    max={100}
+                    min={1}
                     defaultValue={
                       isUpdate === true ? formData.productQuantity : ""
                     }
