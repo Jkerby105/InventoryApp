@@ -8,7 +8,6 @@ export const AdminRoot = () => {
     <>
       <AdminNav />
       <Outlet />
-      {/* <Footer /> */}
     </>
   );
 };

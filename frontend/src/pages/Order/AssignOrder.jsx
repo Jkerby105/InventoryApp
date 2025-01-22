@@ -1,13 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-
-// import "bootstrap/dist/css/bootstrap.min.css";
-// import styles from "../../styles/Admin/viewProducts.module.css";
-import styles from "../../styles/registerSupplier.module.css";
+import styles from "../../styles/addElementStyles.module.css";
 import {
-  useSearchParams,
   useNavigate,
-  redirect,
   useLoaderData,
 } from "react-router-dom";
 
@@ -15,10 +10,6 @@ import {
   Form,
   Button,
   Card,
-  Container,
-  Navbar,
-  Nav,
-  NavDropdown,
   Col,
   Row,
 } from "react-bootstrap";
@@ -33,15 +24,12 @@ export const AssignOrder = () => {
   const organizationEmail = useRef();
   const organizationNumber = useRef();
   const selectedAmount = useRef();
+  const navigate = useNavigate();
 
   const products = useLoaderData();
-  console.log(products);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    console.log(selectedProductId);
-    console.log(selectedAmount.current.value)
 
     const formData ={
       organizationName: organizationName.current.value,
@@ -53,12 +41,16 @@ export const AssignOrder = () => {
       }
 
           try {
-              await axios.post(
+             const response =  await axios.post(
                 `http://localhost:3000/admin/addOrder`,
                 formData
               );
 
-            navigate("/");
+              if (response.status !== 201) {
+                throw new Error("unsuccessful company creation");
+              }
+
+            navigate("/admin");
           } catch (err) {
             setError("Failed to save supplier details.");
           }
@@ -66,12 +58,10 @@ export const AssignOrder = () => {
   }
 
   const handleProductChange = (e) => {
-    console.log("change")
     const selectedTitle = e.target.value;
     const product = products.find((product) => product.Title === selectedTitle);
 
     if (product) {
-      console.log(product)
       setSelectedProductId(product.idProduct);
       setMaxQuantity(product.productQuantity); 
     } else {

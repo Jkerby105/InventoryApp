@@ -1,0 +1,62 @@
+/* adminNav.module.css */
+.navbar {
+    background-color: #f8f9fa; /* Light background */
+    padding: 1rem 0; /* Add spacing */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  }
+  
+  .brand {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333; /* Neutral color for consistency */
+  }
+  
+  .navLinks {
+    justify-content: flex-end;
+  }
+  
+  .navLink {
+    color: #555; /* Neutral text */
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    transition: color 0.2s ease-in-out;
+  }
+  
+  .navLink:hover {
+    color: #000; /* Darker hover effect */
+  }
+  
+  .navDropdown {
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  .dropdownItem {
+    color: #555;
+    font-size: 0.95rem;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  }
+  
+  .dropdownItem:hover {
+    color: #000;
+    background-color: #e9ecef; /* Subtle hover effect */
+  }
+  
+  .logout {
+    color: #d9534f; /* Subtle red for logout */
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+  }
+  
+  .logout:hover {
+    color: #c9302c; /* Darker red on hover */
+  }
+  
+  .divider {
+    border: 0;
+    height: 1px;
+    margin: 0.5rem 0;
+    background-color: #ddd; /* Neutral divider */
+  }
+  

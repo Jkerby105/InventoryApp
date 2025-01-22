@@ -4,13 +4,7 @@ import axios from "axios";
 import styles from "../../styles/Admin/addProduct.module.css";
 import { Form, Button, Card, Col, Row } from "react-bootstrap";
 import { useRef, useEffect, useState } from "react";
-import {
-  useSubmit,
-  redirect,
-  useSearchParams,
-  useNavigate,
-  useLoaderData,
-} from "react-router-dom";
+import { useSearchParams, useNavigate, useLoaderData } from "react-router-dom";
 
 export const AddProduct = () => {
   const [searchParams] = useSearchParams();
@@ -21,8 +15,6 @@ export const AddProduct = () => {
   const productId = searchParams.get("product");
   const [formData, setFormData] = useState([]);
   const [imagePreview, setImagePreview] = useState(null);
-
-  // console.log(formData);
 
   const title = useRef();
   const category = useRef();
@@ -57,14 +49,11 @@ export const AddProduct = () => {
     formData.append("Supplier", supplier.current.value);
     formData.append("Category", category.current.value);
 
-    // console.log(formData);
+    let response;
 
     try {
       if (isUpdate) {
-
-        console.log(formData.get("productImage"));
-
-        await axios.put(
+        response = await axios.put(
           `http://localhost:3000/admin/updateProduct/${productId}`,
           formData,
           {
@@ -72,12 +61,20 @@ export const AddProduct = () => {
           }
         );
       } else {
-        await axios.post("http://localhost:3000/admin/addProduct", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+        response = await axios.post(
+          "http://localhost:3000/admin/addProduct",
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
       }
 
-      navigate("/");
+      if (response.status !== 201) {
+        throw new Error("unsuccessful company creation");
+      }
+
+      navigate("/admin/viewProducts");
     } catch (err) {
       setError("Failed to save supplier details.");
     }
@@ -86,81 +83,85 @@ export const AddProduct = () => {
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setImagePreview(URL.createObjectURL(file)); // Generate a temporary URL for the selected file
+      setImagePreview(URL.createObjectURL(file));
     }
   };
 
   return (
-    <>
-      <Card className={styles.loginCard}>
-        <Card.Body>
-          <h2 className={styles.loginHeader}>Add Product</h2>
-          <Form onSubmit={handleSubmit} encType="multipart/form-data">
-            <Row>
-              <Col>
-                <Form.Group
-                  controlId="productName"
-                  className={styles.formGroup}
+    <Card className={`${styles.loginCard} my-4`}>
+      <Card.Body>
+        <h2 className="text-center mb-4">
+          {isUpdate ? "Update Product" : "Add Product"}
+        </h2>
+        <Form onSubmit={handleSubmit} encType="multipart/form-data">
+          <Row className="gy-3">
+            <Col xs={12} md={6}>
+              <Form.Group controlId="productName" className="mb-3">
+                <Form.Label>Product Title</Form.Label>
+                <Form.Control
+                  type="text"
+                  defaultValue={isUpdate ? formData.Title : ""}
+                  ref={title}
+                  placeholder="Enter product title"
+                  required
+                />
+              </Form.Group>
+
+              <Form.Group controlId="category" className="mb-3">
+                <Form.Label>Select Category</Form.Label>
+                <Form.Control
+                  as="select"
+                  defaultValue={isUpdate ? formData.subCategory : ""}
+                  ref={category}
+                  required
                 >
-                  <Form.Label>Product Title</Form.Label>
-                  <Form.Control
-                    type="text"
-                    className={styles.formControl}
-                    defaultValue={isUpdate === true ? formData.Title : ""}
-                    ref={title}
-                  />
-                </Form.Group>
+                  {data.category.map((category) => (
+                    <option
+                      key={category.idCategory}
+                      value={category.idCategory}
+                    >
+                      {category.Title}
+                    </option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
 
-                <Form.Group controlId="category" className={styles.formGroup}>
-                  <Form.Label>Select Category</Form.Label>
-                  <Form.Control
-                    as="select"
-                    defaultValue={isUpdate === true ? formData.subCategory : ""}
-                    ref={category}
-                  >
-                    {data.category.map((category) => (
-                      <option key={category.idCategory}>
-                        {category.Title}
-                      </option>
-                    ))}
-                  </Form.Control>
-                </Form.Group>
+              <Form.Group controlId="supplier" className="mb-3">
+                <Form.Label>Select Supplier</Form.Label>
+                <Form.Control as="select" ref={supplier} required>
+                  {data.supplier.map((supplier) => (
+                    <option
+                      key={supplier.idSupplier}
+                      value={supplier.idSupplier}
+                    >
+                      {supplier.companyName}
+                    </option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
 
-                <Form.Group controlId="supplier" className={styles.formGroup}>
-                  <Form.Label>Select Supplier</Form.Label>
-                  <Form.Control as="select" ref={supplier}>
-                    {data.supplier.map((supplier) => (
-                      <option key={supplier.idSupplier}>
-                        {supplier.companyName}
-                      </option>
-                    ))}
-                  </Form.Control>
-                </Form.Group>
-
-                <Form.Group controlId="formFile" className="mb-3">
-                  <Form.Label>Select an image</Form.Label>
-                  <Form.Control
-                    type="file"
-                    accept="image/*"
-                    ref={imageFile}
-                    onChange={handleImageChange}
-                  />
-
+              <Form.Group controlId="formFile" className="mb-3">
+                <Form.Label>Select an Image</Form.Label>
+                <Form.Control
+                  type="file"
+                  accept="image/*"
+                  ref={imageFile}
+                  onChange={handleImageChange}
+                />
+                <div className="mt-3">
                   {imagePreview ? (
-                    <div style={{ marginTop: "10px" }}>
-                      <img
-                        src={imagePreview}
-                        alt="Selected Preview"
-                        style={{
-                          maxWidth: "200px",
-                          height: "auto",
-                          border: "1px solid #ccc",
-                          padding: "5px",
-                        }}
-                      />
-                    </div>
+                    <img
+                      src={imagePreview}
+                      alt="Selected Preview"
+                      style={{
+                        maxWidth: "300px",
+                        height: "auto",
+                        border: "1px solid #ccc",
+                        padding: "5px",
+                      }}
+                    />
                   ) : (
-                    <div style={{ marginTop: "10px" }}>
+                    formData.productImage && (
                       <img
                         src={formData.productImage}
                         alt={formData.Title}
@@ -171,55 +172,52 @@ export const AddProduct = () => {
                           padding: "5px",
                         }}
                       />
-                    </div>
+                    )
                   )}
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group
-                  controlId="description"
-                  className={styles.formGroup}
-                >
-                  <Form.Label>Product Description</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    cols={2}
-                    rows={5}
-                    type="text"
-                    placeholder="Enter description"
-                    className={styles.formControl}
-                    defaultValue={isUpdate === true ? formData.Description : ""}
-                    ref={description}
-                  />
-                </Form.Group>
-                <Form.Group
-                  controlId="productQuantity"
-                  className={styles.formGroup}
-                >
-                  <Form.Label>Product Quantity</Form.Label>
-                  <Form.Control
-                    type="number"
-                    className={styles.formControl}
-                    max={100}
-                    min={1}
-                    defaultValue={
-                      isUpdate === true ? formData.productQuantity : ""
-                    }
-                    ref={quantity}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-            {/* <Button type="submit" className={styles.loginButton}>
-              Add Product
-            </Button> */}
-                      <Button type="submit" className={styles.loginButton}>
-                        {isUpdate ? "Update Supplier" : "Add Supplier"}
-                      </Button>
-          </Form>
-        </Card.Body>
-      </Card>
-    </>
+                </div>
+              </Form.Group>
+            </Col>
+
+            <Col xs={12} md={6}>
+              <Form.Group controlId="description" className="mb-3">
+                <Form.Label>Product Description</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={5}
+                  defaultValue={isUpdate ? formData.Description : ""}
+                  ref={description}
+                  placeholder="Enter product description"
+                  required
+                />
+              </Form.Group>
+
+              <Form.Group controlId="productQuantity" className="mb-3">
+                <Form.Label>Product Quantity</Form.Label>
+                <Form.Control
+                  type="number"
+                  defaultValue={isUpdate ? formData.productQuantity : ""}
+                  ref={quantity}
+                  placeholder="Enter product quantity"
+                  min={1}
+                  max={100}
+                  required
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+
+          <div className="text-center mt-4">
+            <Button
+              type="submit"
+              variant="primary"
+              className={styles.loginButton}
+            >
+              {isUpdate ? "Update Product" : "Add Product"}
+            </Button>
+          </div>
+        </Form>
+      </Card.Body>
+    </Card>
   );
 };
 

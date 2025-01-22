@@ -9,11 +9,12 @@ import {
   getSupplierCategories,
   getProducts,
   getProduct,
+  getInventoryData,
   postCategories,
   postSuppliers,
   postProduct,
+  postHighestOrdered,
   putCategories,
-  putOrders,
   putSuppliers,
   putProduct,
   deleteCategories,
@@ -31,10 +32,9 @@ router.get("/categories", getCategories);
 router.get("/category", getCategories);
 router.get("/orders", getOrders);
 router.get("/SuppliersCategories", getSupplierCategories);
-router.get("/products",getProducts);
-router.get("/product/:id",getProduct);
-
-
+router.get("/products", getProducts);
+router.get("/product/:id", getProduct);
+router.get("/inventory", getInventoryData);
 
 // POST
 
@@ -56,15 +56,16 @@ router.post(
 router.post(
   "/addProduct",
   [
-    body("Title").trim().notEmpty().isAlpha(),
-    body("Description").trim().notEmpty().isAlpha(),
+    body("Title").trim().notEmpty().isString(),
+    body("Description").trim().notEmpty().isString(),
     body("suppliedQuantity").trim().notEmpty().isNumeric(),
-    body("Supplier").trim().notEmpty().isAlpha(),
-    body("Category").trim().notEmpty().isAlpha(),
+    body("Supplier").trim().notEmpty().isNumeric(),
+    body("Category").trim().notEmpty().isNumeric(),
   ],
   postProduct
 );
 router.post("/addOrder", [], postOrder);
+router.post("/highestOrdered", [], postHighestOrdered);
 
 // PUT
 

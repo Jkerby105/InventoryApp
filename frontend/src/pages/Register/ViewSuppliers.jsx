@@ -1,22 +1,16 @@
 import React, { useState, useRef } from "react";
 import axios from "axios";
-import { redirect, useLoaderData, useNavigate, useSubmit } from "react-router-dom";
+import {
+  redirect,
+  useLoaderData,
+  useNavigate,
+  useSubmit,
+} from "react-router-dom";
 import styles from "../../styles/Admin/addProduct.module.css";
-
 
 import Modal from "../../components/modal";
 
-import {
-  Form,
-  Button,
-  Card,
-  Container,
-  Navbar,
-  Nav,
-  NavDropdown,
-  Col,
-  Row,
-} from "react-bootstrap";
+import { Button, Card } from "react-bootstrap";
 
 export const ViewSuppliers = () => {
   const submit = useSubmit();
@@ -24,11 +18,9 @@ export const ViewSuppliers = () => {
   let navigate = useNavigate();
   const data = useLoaderData();
   const [suppliers, setSuppliers] = useState(data.data);
-   const [supplierID, setSupplierID] = useState(null);
-
+  const [supplierID, setSupplierID] = useState(null);
 
   function deleteSupplier() {
-    // console.log("remove");
     const formData = new FormData();
     formData.append("supplierID", supplierID);
     submit(formData, { method: "DELETE" });
@@ -39,10 +31,9 @@ export const ViewSuppliers = () => {
     dialog.current.open();
   }
 
-
   return (
     <>
-      <Modal ref={dialog} removeItem={ deleteSupplier}/>
+      <Modal ref={dialog} removeItem={deleteSupplier} />
 
       <Card className={styles.loginCard}>
         <Card.Body>
@@ -83,7 +74,7 @@ export const ViewSuppliers = () => {
                       {" "}
                       <Button
                         className="btn btn-sm btn-danger"
-                        onClick={() =>  handleDelete(supplier.idSupplier)}
+                        onClick={() => handleDelete(supplier.idSupplier)}
                       >
                         Delete
                       </Button>
@@ -102,22 +93,19 @@ export const ViewSuppliers = () => {
 export async function action({ request, params }) {
   const data = await request.formData();
   const supplierID = data.get("supplierID");
-  console.log("here")
-  console.log(supplierID)
-  const response = await axios.delete("http://localhost:3000/admin/supplier/ " + supplierID);
- 
+  const response = await axios.delete(
+    "http://localhost:3000/admin/supplier/ " + supplierID
+  );
+
   if (response.status !== 201) {
     throw new Error("unsuccessful company creation");
   }
 
   return redirect("/admin");
-
 }
 
 export async function loader({ request, params }) {
-
   const response = await axios.get("http://localhost:3000/admin/suppliers");
-
 
   if (response.status !== 201) {
     throw new Error("unsuccessful company creation");

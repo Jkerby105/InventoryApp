@@ -1,27 +1,14 @@
 import React from "react";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import styles from "../../styles/Admin/viewProducts.module.css";
-import { redirect, useLoaderData, useNavigate, useSubmit } from "react-router-dom";
+import styles from "../../styles/Admin/viewStyles.module.css";
+import { useLoaderData } from "react-router-dom";
 import axios from "axios";
 
-
-import {
-  Form,
-  Button,
-  Card,
-  Container,
-  Navbar,
-  Nav,
-  NavDropdown,
-  Col,
-  Row,
-} from "react-bootstrap";
+import { Card } from "react-bootstrap";
 
 export const ViewOrders = () => {
-
   const ordersList = useLoaderData();
-  
 
   return (
     <>
@@ -45,32 +32,34 @@ export const ViewOrders = () => {
                 </tr>
               </thead>
               <tbody>
-                                {ordersList.map((order, index) => (
-                                  <tr key={order.idProduct}>
-                                    <th scope="row">{index + 1}</th>
-                                   <td scope="col">{order.organizationName}</td>
+                {ordersList.map((order, index) => (
+                  <tr key={order.idProduct}>
+                    <th scope="row">{index + 1}</th>
+                    <td scope="col">{order.organizationName}</td>
 
-                                    <td>
-                                      {order.productImage ? (
-                                        <img
-                                          src={order.productImage}
-                                          alt={order.Title}
-                                          style={{ width: "100px", height: "auto" }}
-                                        />
-                                      ) : (
-                                        "No Image"
-                                      )}
-                                    </td>
-                                    <td>{order.totalQuantity}</td>
-                                    <td>{order.organizationAddress}</td>
-                                    <td>{order.organizationEmail}</td>
-                                    <td>{order.organizationNumber}</td>
-                                    <td>{order.createdAt}</td>
-                                    <td>{order.deliveryDate?order.deliveryDate:"Not Yet Delivered"}</td>
-                                  </tr>
-                                ))}
-
-
+                    <td>
+                      {order.productImage ? (
+                        <img
+                          src={order.productImage}
+                          alt={order.Title}
+                          style={{ width: "100px", height: "auto" }}
+                        />
+                      ) : (
+                        "No Image"
+                      )}
+                    </td>
+                    <td>{order.totalQuantity}</td>
+                    <td>{order.organizationAddress}</td>
+                    <td>{order.organizationEmail}</td>
+                    <td>{order.organizationNumber}</td>
+                    <td>{order.createdAt}</td>
+                    <td>
+                      {order.deliveryDate
+                        ? order.deliveryDate
+                        : "Not Yet Delivered"}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
@@ -80,39 +69,41 @@ export const ViewOrders = () => {
   );
 };
 
-
-
-
 export async function loader({ request, params }) {
-
-  console.log("loader")
+  console.log("loader");
 
   const response = await axios.get("http://localhost:3000/admin/orders");
-  console.log("loader")
-  console.log(response)
+  console.log("loader");
+  console.log(response);
 
   if (response.status !== 201) {
     throw new Error("unsuccessful company creation");
   }
 
   const formatResult = response.data.data.map((order) => {
-      const date = new Date(order.createdAt);
-      const formattedDate = date.toLocaleDateString("en-US", {
-        year: "2-digit",
-        month: "2-digit",
-        day: "2-digit"
-      });
+    const date = new Date(order.createdAt);
+    const formattedDate = date.toLocaleDateString("en-US", {
+      year: "2-digit",
+      month: "2-digit",
+      day: "2-digit",
+    });
 
-      const formattedNumber = order.organizationNumber? `${order.organizationNumber.slice(0, 3)}-${order.organizationNumber.slice(3, 6)}-${order.organizationNumber.slice(6)}`
+    const formattedNumber = order.organizationNumber
+      ? `${order.organizationNumber.slice(
+          0,
+          3
+        )}-${order.organizationNumber.slice(
+          3,
+          6
+        )}-${order.organizationNumber.slice(6)}`
       : null;
 
-      return{
-        ...order,
-        createdAt: formattedDate,
-        organizationNumber: formattedNumber,
-      }
-
-  })
+    return {
+      ...order,
+      createdAt: formattedDate,
+      organizationNumber: formattedNumber,
+    };
+  });
 
   return formatResult;
 }

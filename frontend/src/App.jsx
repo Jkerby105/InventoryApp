@@ -5,11 +5,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { AccountRoot } from "./pages/Account/AccountRoot";
 import { Login } from "./pages/Account/Login";
 import { CreateAccount, action as createAccountAction } from "./pages/Account/CreateAccount";
-import { AboutUs } from "./pages/Account/AboutUs";
-import { ForgetPassword } from "./pages/Account/ForgetPassword";
 // -------------------------------- \\
 import { AdminRoot } from "./pages/Admin/AdminRoot";
-import { InventoryData } from "./pages/Company/InventoryData";
+import { InventoryData, loader as dataLoader, action as dataAction } from "./pages/Company/InventoryData";
 import { ViewProducts, loader as viewProductLoader, action as productRemoveAction } from "./pages/Product/ViewProducts";
 import { AddProduct, loader as productsLoader, action as productAction } from "./pages/Product/AddProduct";
 import { AddCategory, action as categoryAction } from "./pages/Category/AddCategory";
@@ -27,11 +25,11 @@ function App() {
       {
         path: "/",
         errorElement: <SomeError/>,
-        element: <AccountRoot />,
+        element: <Login />,
       },
       {
         errorElement: <SomeError/>,
-        path: "Login",
+        path: ("Login"),
         element: <AccountRoot />,
         children: [
           {
@@ -43,14 +41,6 @@ function App() {
             element: <CreateAccount />,
             action: createAccountAction
           },
-          {
-            path: "ForgotPassword", // Relative path
-            element: <ForgetPassword />,
-          },
-          {
-            path: "AboutUs", // Relative path
-            element: <AboutUs />,
-          },
         ],
       },
       {
@@ -60,6 +50,8 @@ function App() {
           {
             index: true,
             element: <InventoryData />,
+            loader: dataLoader,
+            // action:dataAction
           },
           {
             path: "AddProduct",
@@ -77,11 +69,6 @@ function App() {
             path: "AddCategory",
             element: <AddCategory />,
             action: categoryAction
-          },
-          {
-            path: "ViewCategories",
-            element: <AddCategory />,
-           
           },
           {
             path: "AddSupplier",

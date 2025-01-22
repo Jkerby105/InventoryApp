@@ -1,7 +1,7 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import styles from "../../styles/Admin/viewProducts.module.css";
+import styles from "../../styles/Admin/viewStyles.module.css";
 import { Card, Button } from "react-bootstrap";
 import Modal from "../../components/modal";
 import axios from "axios";
@@ -15,6 +15,7 @@ Modal;
 
 export const ViewProducts = () => {
   const submit = useSubmit();
+  const navigate = useNavigate();
   const dialog = useRef();
   const products = useLoaderData().data;
   const [productID, setProductID] = useState(null);
@@ -78,10 +79,10 @@ export const ViewProducts = () => {
                     <td>
                       <span
                         className={`badge bg-${
-                          product.active ? "success" : "danger"
+                          product.productQuantity ? "success" : "danger"
                         }`}
                       >
-                        {product.active ? "Active" : "Inactive"}
+                        {product.productQuantity ? "Available" : "Unavailable"}
                       </span>
                     </td>
                     <td>
@@ -89,7 +90,7 @@ export const ViewProducts = () => {
                         className="btn btn-sm btn-primary"
                         onClick={() => {
                           navigate(
-                            `/admin/AddProduct/?update=true&supplier=${product.idProduct}`
+                            `/admin/AddProduct/?update=true&product=${product.idProduct}`
                           );
                         }}
                       >
@@ -131,7 +132,6 @@ export async function action({ request, params }) {
 
 export async function loader({ request, params }) {
   const response = await axios.get("http://localhost:3000/admin/products");
-  // console.log(response.data);
   if (response.status !== 201) {
     throw new Error("unsuccessful company creation");
   }

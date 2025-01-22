@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import styles from "../../styles/registerSupplier.module.css";
+import styles from "../../styles/addElementStyles.module.css";
 import { Form, Button, Card, Col, Row } from "react-bootstrap";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
@@ -17,7 +17,6 @@ export const RegisterSupplier = () => {
   const phone = useRef();
   const address = useRef();
   const email = useRef();
-
 
   const [error, setError] = useState(null);
 
@@ -40,25 +39,34 @@ export const RegisterSupplier = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formData ={
-    idSupplier: supplierId,
-    companyName: name.current.value,
-    companyEmail: email.current.value,
-    companyAddress: address.current.value,
-    companyPhone: phone.current.value,
-    }
-    
+    const formData = {
+      idSupplier: supplierId,
+      companyName: name.current.value,
+      companyEmail: email.current.value,
+      companyAddress: address.current.value,
+      companyPhone: phone.current.value,
+    };
+
+    let response;
+
     try {
       if (isUpdate) {
-        await axios.put(
+        response = await axios.put(
           `http://localhost:3000/admin/updateSupplier/${supplierId}`,
           formData
         );
       } else {
-        await axios.post("http://localhost:3000/admin/addSupplier", formData);
+        response = await axios.post(
+          "http://localhost:3000/admin/addSupplier",
+          formData
+        );
       }
 
-      navigate("/");
+      if (response.status !== 201) {
+        throw new Error("unsuccessful company creation");
+      }
+
+      return navigate("/admin/ViewSuppliers");
     } catch (err) {
       setError("Failed to save supplier details.");
     }
@@ -79,11 +87,7 @@ export const RegisterSupplier = () => {
                 <Form.Control
                   type="text"
                   name="name"
-                  defaultValue={
-                    isUpdate === true 
-                      ? formData.companyName
-                      : ""
-                  }
+                  defaultValue={isUpdate === true ? formData.companyName : ""}
                   ref={name}
                   placeholder="Enter company name"
                   required
@@ -94,11 +98,7 @@ export const RegisterSupplier = () => {
                 <Form.Control
                   type="email"
                   name="email"
-                  defaultValue={
-                    isUpdate === true 
-                      ? formData.companyEmail
-                      : ""
-                  }
+                  defaultValue={isUpdate === true ? formData.companyEmail : ""}
                   ref={email}
                   placeholder="Enter company email"
                   required
@@ -111,11 +111,8 @@ export const RegisterSupplier = () => {
                 <Form.Control
                   type="text"
                   name="address"
-
                   defaultValue={
-                    isUpdate === true 
-                      ? formData.companyAddress
-                      : ""
+                    isUpdate === true ? formData.companyAddress : ""
                   }
                   ref={address}
                   placeholder="Enter company address"
@@ -127,11 +124,7 @@ export const RegisterSupplier = () => {
                 <Form.Control
                   type="text"
                   name="phone"
-                  defaultValue={
-                    isUpdate === true 
-                      ? formData.companyPhone
-                      : ""
-                  }
+                  defaultValue={isUpdate === true ? formData.companyPhone : ""}
                   ref={phone}
                   placeholder="Enter company phone"
                   required
@@ -147,5 +140,3 @@ export const RegisterSupplier = () => {
     </Card>
   );
 };
-
-
