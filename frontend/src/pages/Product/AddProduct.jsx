@@ -30,6 +30,12 @@ export const AddProduct = () => {
           const response = await axios.get(
             `http://localhost:3000/admin/product/${productId}`
           );
+
+          if (response.status !== 201) {
+            throw new Error("unsuccessful product addition");
+          }
+        
+
           setFormData(response.data.data);
         } catch (err) {
           throw new Error("Error occurred");
@@ -144,7 +150,7 @@ export const AddProduct = () => {
                 <Form.Label>Select an Image</Form.Label>
                 <Form.Control
                   type="file"
-                  accept="image/*"
+                  accept="image/png, image/jpeg"
                   ref={imageFile}
                   onChange={handleImageChange}
                 />

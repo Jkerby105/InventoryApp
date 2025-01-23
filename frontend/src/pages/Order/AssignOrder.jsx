@@ -50,9 +50,18 @@ export const AssignOrder = () => {
                 throw new Error("unsuccessful company creation");
               }
 
+              if (response.status !== 201) {
+                throw new Error("unsuccessful supplier loader");
+              }
+
+              if (response.status !== 201) {
+                throw new Error("unsuccessful supplier loader");
+              }
+            
+
             navigate("/admin");
           } catch (err) {
-            setError("Failed to save supplier details.");
+            throw new Error("Failed to save supplier details.");
           }
 
   }

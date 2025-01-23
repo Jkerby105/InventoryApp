@@ -33,8 +33,12 @@ export const AddCategory = () => {
 
         setCategories(response.data.categories);
         setProducts(response.data.products);
+
+        if (response.status !== 201) {
+          throw new Error("unsuccessful supplier loader");
+        }
       } catch (error) {
-        console.error("Error fetching categories:", error);
+        
       }
     }
     fetchCategories();

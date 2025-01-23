@@ -24,7 +24,6 @@ export async function getSupplier(req, res, next) {
       "SELECT * FROM `Supplier` WHERE `idSupplier` = ?",
       [id]
     );
-    console.log(result);
     res.status(201).json({ data: result });
   } catch (error) {
     error.statusCode = 422;
@@ -43,7 +42,6 @@ export async function getCategories(req, res, next) {
         Category c
     `);
 
-    console.log(resultCategories)
 
     const [resultProducts, fields] = await pool.query(`
       SELECT 
@@ -55,8 +53,6 @@ export async function getCategories(req, res, next) {
          Product p
     `);
 
-
-    console.log(resultProducts)
 
     res.status(201).json({ categories: resultCategories, products: resultProducts });
   } catch (error) {
@@ -170,23 +166,19 @@ export async function getInventoryData(req, res, next) {
     const [productCountResult] = await pool.query(
       "SELECT COUNT(*) AS count FROM `Product`"
     );
-    // console.log("Product Count:", productCountResult[0].count);
 
     const [orderCountResult] = await pool.query(
       "SELECT COUNT(*) AS count FROM `ORDERS`"
     );
-    // console.log("Order Count:", orderCountResult[0].count);
 
     const [supplierCountResult] = await pool.query(
       "SELECT COUNT(*) AS count FROM `Supplier`"
     );
-    // console.log("Supplier Count:", supplierCountResult[0].count);
 
     const [categoryCountResult] = await pool.query(
       "SELECT COUNT(*) AS count FROM `Category`"
     );
 
-    // console.log("Category Count:", categoryCountResult[0].count);
 
     const [result] = await pool.query(`
       SELECT 
@@ -202,9 +194,6 @@ export async function getInventoryData(req, res, next) {
           TotalSold DESC
       LIMIT 5
     `);
-
-    // console.log("-----------------------------")
-    // console.log(result);
 
     res.status(201).json({
       productCount: productCountResult,
@@ -223,16 +212,11 @@ export async function getInventoryData(req, res, next) {
 // Post
 
 export async function postSuppliers(req, res, next) {
-  console.log("postSuppliers")
   validator(req);
   const name = req.body.companyName;
   const address = req.body.companyAddress;
   const phone = req.body.companyPhone;
   const email = req.body.companyEmail;
-  console.log(name)
-  console.log(address)
-  console.log(phone)
-  console.log(email)
 
   try {
       await pool.query(
@@ -240,7 +224,6 @@ export async function postSuppliers(req, res, next) {
       [name, email, address, phone]
     );
 
-    console.log("next")
 
     res.status(201).json({ message: "successfully created" });
   } catch (error) {
@@ -292,7 +275,6 @@ export async function postProduct(req, res, next) {
       ]
     );
 
-    console.log("Product successfully created");
     res.status(201).json({ message: "Product successfully created" });
   } catch (error) {
     // Handle errors
@@ -305,7 +287,6 @@ export async function postProduct(req, res, next) {
 export async function postOrder(req, res, next) {
   validator(req);
 
-  console.log("hello From post controller");
 
   try {
     const organizationName = req.body.organizationName;
@@ -314,6 +295,7 @@ export async function postOrder(req, res, next) {
     const organizationNumber = req.body.organizationNumber;
     const productID = req.body.selectedProduct;
     const productQuantity = req.body.productAmount;
+  
 
     await pool.query(
       "INSERT INTO `Orders` (`deliveryDate`,`totalQuantity`,`organizationName`, `organizationAddress`, `organizationEmail`, `organizationNumber`, `Product_productID`) VALUES(?,?,?,?,?,?,?)",
@@ -344,7 +326,6 @@ export async function postOrder(req, res, next) {
 }
 
 export async function postHighestOrdered(req, res, next) {
-  console.log("highestOrderedProducts");
 
   const startDate = req.body.startDateTime;
   const endDate = req.body.endDateTime;
@@ -423,15 +404,11 @@ export async function putCategories(req, res, next) {
 }
 
 export async function putProduct(req, res, next) {
-  console.log("update");
-  console.log("hello here ");
-  console.log(req.body.Title);
+  validator(req);
 
   const productID = req.params.id;
 
   try {
-    // validator(req);
-
     const Title = req.body.Title;
     const Description = req.body.Description;
     const productQuantity = req.body.suppliedQuantity;
@@ -442,15 +419,6 @@ export async function putProduct(req, res, next) {
     const Supplier = req.body.Supplier;
     const Category = req.body.Category;
 
-    const supplierId = await pool.query(
-      "SELECT idSupplier FROM Supplier WHERE companyName = ?",
-      [Supplier]
-    );
-    const categoryID = await pool.query(
-      "SELECT idCategory FROM Category WHERE Title = ?",
-      [Category]
-    );
-
     if (productImage) {
       await pool.query(
         "UPDATE `Product` SET `Title` = ?, `Description` = ?, `productImage` = ?, `productQuantity` = ?, `Supplier_idSupplier` = ?, `subCategory` = ? WHERE `idProduct` = ?",
@@ -459,8 +427,8 @@ export async function putProduct(req, res, next) {
           Description,
           productImage,
           productQuantity,
-          supplierId[0][0].idSupplier,
-          categoryID[0][0].idCategory,
+          Supplier,
+          Category,
           productID,
         ]
       );
@@ -471,8 +439,8 @@ export async function putProduct(req, res, next) {
           Title,
           Description,
           productQuantity,
-          supplierId[0][0].idSupplier,
-          categoryID[0][0].idCategory,
+          Supplier,
+          Category,
           productID,
         ]
       );
@@ -525,7 +493,6 @@ export async function deleteProduct(req, res, next) {
   try {
     await pool.query("DELETE FROM `Product` WHERE idProduct = ?", [productID]);
 
-    console.log("product Delete");
     res.status(201).json({ message: "Successfully Delete" });
   } catch (error) {
     error.statusCode = 422;

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import styles from "../../styles/login.module.css";
 import { Form, Button, Card } from "react-bootstrap";
+import { AccountNav } from "../../components/AccountNav";
+import { Footer } from "../../components/Footer";
 
 export const Login = () => {
   const [errors, setErrors] = useState({});
@@ -27,6 +29,8 @@ export const Login = () => {
   };
 
   return (
+    <>
+      <AccountNav/>
     <Card className={styles.loginCard}>
       <Card.Body>
         <h2 className={styles.loginHeader}>Login</h2>
@@ -69,5 +73,7 @@ export const Login = () => {
         </Form>
       </Card.Body>
     </Card>
+    <Footer/>
+    </>
   );
 };

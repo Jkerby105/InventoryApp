@@ -46,8 +46,12 @@ export const InventoryData = () => {
           formData
         );
         setOrderSearchList(response.data.orderSearchList);
+        if (response.status !== 201) {
+          throw new Error("unsuccessful supplier loader");
+        }
+      
       } catch (err) {
-        console.error("Failed to fetch order data.");
+        throw new Error("unsuccessful supplier loader");
       }
     }
   };
@@ -59,6 +63,7 @@ export const InventoryData = () => {
         <Col xs={12} sm={6} lg={3}>
           <Card
             className={`p-3 text-center ${styles.statCard}`}
+            style={{ cursor: "pointer" }}
             onClick={() => navigate("/admin/ViewSuppliers")}
           >
             <FaUsers size={30} />
@@ -69,6 +74,7 @@ export const InventoryData = () => {
         <Col xs={12} sm={6} lg={3}>
           <Card
             className={`p-3 text-center ${styles.statCard}`}
+            style={{ cursor: "pointer" }}
             onClick={() => navigate("/admin/AddCategory")}
           >
             <FaTags size={30} />
@@ -79,6 +85,7 @@ export const InventoryData = () => {
         <Col xs={12} sm={6} lg={3}>
           <Card
             className={`p-3 text-center ${styles.statCard}`}
+            style={{ cursor: "pointer" }}
             onClick={() => navigate("/admin/viewProducts")}
           >
             <FaClipboardList size={30} />
@@ -89,6 +96,7 @@ export const InventoryData = () => {
         <Col xs={12} sm={6} lg={3}>
           <Card
             className={`p-3 text-center ${styles.statCard}`}
+            style={{ cursor: "pointer" }}
             onClick={() => navigate("/admin/Orders")}
           >
             <FaShoppingCart size={30} />

@@ -64,8 +64,19 @@ router.post(
   ],
   postProduct
 );
-router.post("/addOrder", [], postOrder);
-router.post("/highestOrdered", [], postHighestOrdered);
+router.post(
+  "/addOrder",
+  [
+    body("organizationName").trim().notEmpty().isString(),
+    body("organizationEmail").trim().notEmpty().isEmail(),
+    body("organizationAddress").trim().notEmpty().isString(),
+    body("organizationNumber").trim().notEmpty().isNumeric(),
+    body("selectedProduct").trim().notEmpty().isNumeric(),
+    body("productAmount").trim().notEmpty().isNumeric(),
+  ],
+  postOrder
+);
+router.post("/highestOrdered", postHighestOrdered);
 
 // PUT
 
@@ -87,7 +98,17 @@ router.put(
   ],
   putCategories
 );
-router.put("/updateProduct/:id", [], putProduct);
+router.put(
+  "/updateProduct/:id",
+  [
+    body("Title").trim().notEmpty().isString(),
+    body("Description").trim().notEmpty().isString(),
+    body("suppliedQuantity").trim().notEmpty().isNumeric(),
+    body("Supplier").trim().notEmpty().isNumeric(),
+    body("Category").trim().notEmpty().isNumeric(),
+  ],
+  putProduct
+);
 
 // DELETE
 

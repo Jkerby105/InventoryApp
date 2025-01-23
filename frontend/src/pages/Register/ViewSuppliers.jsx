@@ -98,7 +98,7 @@ export async function action({ request, params }) {
   );
 
   if (response.status !== 201) {
-    throw new Error("unsuccessful company creation");
+    throw new Error("unsuccessful supplier creation");
   }
 
   return redirect("/admin");
@@ -108,7 +108,7 @@ export async function loader({ request, params }) {
   const response = await axios.get("http://localhost:3000/admin/suppliers");
 
   if (response.status !== 201) {
-    throw new Error("unsuccessful company creation");
+    throw new Error("unsuccessful supplier loader");
   }
 
   return response.data;

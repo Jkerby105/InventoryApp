@@ -14,8 +14,8 @@ export const AccountNav = () => {
           className="justify-content-end"
         >
           <Nav>
-            <Nav.Link href="/Login">Login</Nav.Link>
-            <Nav.Link href="/Login/CreateAccount">Create Account</Nav.Link>
+            <Nav.Link href="/">Login</Nav.Link>
+            <Nav.Link href="/AboutUs">About Us</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

@@ -124,7 +124,7 @@ export async function action({ request, params }) {
   );
 
   if (response.status !== 201) {
-    throw new Error("unsuccessful company creation");
+    throw new Error("unsuccessful product creation");
   }
 
   return redirect("/admin");
@@ -133,7 +133,7 @@ export async function action({ request, params }) {
 export async function loader({ request, params }) {
   const response = await axios.get("http://localhost:3000/admin/products");
   if (response.status !== 201) {
-    throw new Error("unsuccessful company creation");
+    throw new Error("unsuccessful product loader");
   }
 
   return response.data;

@@ -2,73 +2,91 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 // -------------------------------- \\
-import { AccountRoot } from "./pages/Account/AccountRoot";
+import { AboutUs } from "./pages/Company/AboutUs";
 import { Login } from "./pages/Account/Login";
-import { CreateAccount, action as createAccountAction } from "./pages/Account/CreateAccount";
+import {
+  CreateAccount,
+  action as createAccountAction,
+} from "./pages/Account/CreateAccount";
 // -------------------------------- \\
 import { AdminRoot } from "./pages/Admin/AdminRoot";
-import { InventoryData, loader as dataLoader, action as dataAction } from "./pages/Company/InventoryData";
-import { ViewProducts, loader as viewProductLoader, action as productRemoveAction } from "./pages/Product/ViewProducts";
-import { AddProduct, loader as productsLoader, action as productAction } from "./pages/Product/AddProduct";
-import { AddCategory, action as categoryAction } from "./pages/Category/AddCategory";
+import {
+  InventoryData,
+  loader as dataLoader
+} from "./pages/Company/InventoryData";
+import {
+  ViewProducts,
+  loader as viewProductLoader,
+  action as productRemoveAction,
+} from "./pages/Product/ViewProducts";
+import {
+  AddProduct,
+  loader as productsLoader,
+  action as productAction,
+} from "./pages/Product/AddProduct";
+import {
+  AddCategory,
+  action as categoryAction,
+} from "./pages/Category/AddCategory";
 import { RegisterSupplier } from "./pages/Register/RegisterSupplier";
-import {ViewSuppliers, loader as suppliersLoader, action as suppliersAction} from "./pages/Register/ViewSuppliers";
+import {
+  ViewSuppliers,
+  loader as suppliersLoader,
+  action as suppliersAction,
+} from "./pages/Register/ViewSuppliers";
 import { ViewOrders, loader as ordersLoader } from "./pages/Order/ViewOrders";
-import { AssignOrder, loader as productLoader } from "./pages/Order/AssignOrder";
+import {
+  AssignOrder,
+  loader as productLoader,
+} from "./pages/Order/AssignOrder";
 // -------------------------------- \\
 
-import {SomeError} from "./pages/Error/SomeError"
+import { SomeError } from "./pages/Error/SomeError";
 
 function App() {
   const router = createBrowserRouter(
     [
       {
+        errorElement: <SomeError />,
         path: "/",
-        errorElement: <SomeError/>,
-        element: <Login />,
-      },
-      {
-        errorElement: <SomeError/>,
-        path: ("Login"),
-        element: <AccountRoot />,
         children: [
           {
             index: true,
             element: <Login />,
           },
           {
-            path: "CreateAccount", // Relative path
-            element: <CreateAccount />,
-            action: createAccountAction
-          },
+            path: "AboutUs",
+            element: <AboutUs/>
+          }
         ],
       },
+
       {
-        path: "Admin",
+        errorElement: <SomeError />,
         element: <AdminRoot />,
+        path: "Admin",
         children: [
           {
             index: true,
             element: <InventoryData />,
             loader: dataLoader,
-            // action:dataAction
           },
           {
             path: "AddProduct",
             element: <AddProduct />,
             loader: productsLoader,
-            action: productAction
+            action: productAction,
           },
           {
             path: "ViewProducts",
             element: <ViewProducts />,
             loader: viewProductLoader,
-            action: productRemoveAction
+            action: productRemoveAction,
           },
           {
             path: "AddCategory",
             element: <AddCategory />,
-            action: categoryAction
+            action: categoryAction,
           },
           {
             path: "AddSupplier",
@@ -83,12 +101,17 @@ function App() {
           {
             path: "Orders",
             element: <ViewOrders />,
-            loader: ordersLoader
+            loader: ordersLoader,
           },
           {
             path: "assignOrder",
             element: <AssignOrder />,
-            loader: productLoader
+            loader: productLoader,
+          },
+          {
+            path: "CreateAccount",
+            element: <CreateAccount />,
+            action: createAccountAction,
           },
         ],
       },
