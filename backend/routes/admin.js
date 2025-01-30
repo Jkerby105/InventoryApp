@@ -24,8 +24,8 @@ import {
 } from "../controller/admin.js";
 const router = express.Router();
 
-// GET
 
+// GET
 router.get("/suppliers", getSuppliers);
 router.get("/supplier/:id", getSupplier);
 router.get("/categories", getCategories);

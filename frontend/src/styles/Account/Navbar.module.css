@@ -1,14 +1,14 @@
-/* adminNav.module.css */
+
 .navbar {
-    background-color: #f8f9fa; /* Light background */
-    padding: 1rem 0; /* Add spacing */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    background-color: #f8f9fa;
+    padding: 1rem 0; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
   }
   
   .brand {
     font-size: 1.5rem;
     font-weight: 600;
-    color: #333; /* Neutral color for consistency */
+    color: #333;
   }
   
   .navLinks {
@@ -16,14 +16,14 @@
   }
   
   .navLink {
-    color: #555; /* Neutral text */
+    color: #555; 
     font-size: 1rem;
     padding: 0.5rem 1rem;
     transition: color 0.2s ease-in-out;
   }
   
   .navLink:hover {
-    color: #000; /* Darker hover effect */
+    color: #000; 
   }
   
   .navDropdown {
@@ -40,23 +40,23 @@
   
   .dropdownItem:hover {
     color: #000;
-    background-color: #e9ecef; /* Subtle hover effect */
+    background-color: #e9ecef; 
   }
   
   .logout {
-    color: #d9534f; /* Subtle red for logout */
+    color: #d9534f; 
     font-weight: 500;
     padding: 0.5rem 1rem;
   }
   
   .logout:hover {
-    color: #c9302c; /* Darker red on hover */
+    color: #c9302c;
   }
   
   .divider {
     border: 0;
     height: 1px;
     margin: 0.5rem 0;
-    background-color: #ddd; /* Neutral divider */
+    background-color: #ddd;
   }
   

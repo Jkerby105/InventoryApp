@@ -1,0 +1,61 @@
+/* Navbar container */
+.navbar {
+    background-color: #f8f9fa;
+    padding: 1rem 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-bottom: 2px solid #ddd;
+  }
+  
+  /* Brand styling */
+  .brand {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #333;
+    transition: color 0.3s ease-in-out;
+  }
+  
+  .brand:hover {
+    color: #0056b3;
+  }
+  
+  /* Navbar links styling */
+  .navLinks {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+  }
+  
+  /* Dropdown Styling */
+  .navDropdown {
+    font-weight: 500;
+  }
+  
+  .dropdownItem {
+    font-size: 1rem;
+  }
+  
+  /* Spacing between brand and navigation */
+  .me-auto {
+    margin-right: auto;
+  }
+  
+  .ms-auto {
+    margin-left: auto;
+  }
+  
+  /* Styled Logout Button */
+  .logoutButton {
+    font-size: 1rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 500;
+    background-color: #dc3545;
+    border: none;
+    color: white;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  .logoutButton:hover {
+    background-color: #bb2d3b;
+  }
+  

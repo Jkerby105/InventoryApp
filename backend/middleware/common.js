@@ -2,16 +2,29 @@ import bodyParser from "body-parser";
 import cors from "cors"
 import { validationResult } from "express-validator";
 
+const allowedOrigin = "http://localhost:5173"; // origin
+
 export const commonMiddleWare = [
-    bodyParser.json(),
-    cors(),
-    (req, res, next) => {
-        res.setHeader("Access-Control-Allow-Origin", "*");
-        res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE");
-        res.setHeader("Access-Control-Allow-Headers", "Content,Authorization,Content-Type");
-        next();
-      },
+  bodyParser.json(),
+  cors({
+    origin: allowedOrigin, 
+    credentials: true, 
+  }),
+  (req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", allowedOrigin); 
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+      "GET,POST,PUT,PATCH,DELETE"
+    );
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "Content,Authorization,Content-Type"
+    );
+    res.setHeader("Access-Control-Allow-Credentials", "true"); 
+    next();
+  },
 ];
+
 
 export const validator = (req) => {
 

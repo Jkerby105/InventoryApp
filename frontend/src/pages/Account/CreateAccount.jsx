@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import styles from "../../styles/createAccount.module.css";
 import { Form, Button, Card } from "react-bootstrap";
+import { useSubmit,redirect } from "react-router-dom";
+import axios from "axios";
 
 export const CreateAccount = () => {
+  const submit = useSubmit(); 
   const [formData, setFormData] = useState({
     userName: "",
     userLastName: "",
@@ -31,6 +34,7 @@ export const CreateAccount = () => {
   };
 
   const handleSubmit = (e) => {
+
     e.preventDefault();
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
@@ -38,19 +42,20 @@ export const CreateAccount = () => {
       return;
     }
 
-    // const formData = new FormData();
-    // formData.append("userName", userName.current.value);
-    // formData.append("userLastName", userLastName.current.value);
-    // formData.append("phone", phone.current.value);
-    // formData.append("address", address.current.value);
-    // formData.append("email", email.current.value);
-    // formData.append("password", password.current.value);
-    // formData.append("role", role.current.value);
+   
+    const formDataAdmin = new FormData();
+    formDataAdmin.append("userName", formData.userName);
+    formDataAdmin.append("userLastName", formData.userLastName);
+    formDataAdmin.append("phone", formData.phone);
+    formDataAdmin.append("address", formData.address);
+    formDataAdmin.append("email", formData.email);
+    formDataAdmin.append("password", formData.password);
+    formDataAdmin.append("role", formData.role);
 
-    // submit(formData, { method: "POST" });
+    submit(formDataAdmin, { method: "POST" });
 
     // Submit the form if validation passes
-    console.log("Form submitted", formData);
+    // console.log("Form submitted", formDataAdmin);
   };
 
   return (
@@ -93,7 +98,7 @@ export const CreateAccount = () => {
                 setFormData({ ...formData, role: e.target.value })
               }
             >
-              <option>Admin</option>
+              <option >Admin</option>
               <option>SuperAdmin</option>
             </Form.Control>
           </Form.Group>
@@ -109,6 +114,7 @@ export const CreateAccount = () => {
 
 
 export async function action({ request, params }) {
+
   const data = await request.formData();
   const accountCreation = {
     userName: data.get("userName"),
@@ -119,6 +125,8 @@ export async function action({ request, params }) {
     password: data.get("password"),
     role: data.get("role"),
   };
+
+  console.log(accountCreation)
 
   const response = await axios.post(
     "http://localhost:3000/account/create",

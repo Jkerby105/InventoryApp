@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 // -------------------------------- \\
 import { AboutUs } from "./pages/Company/AboutUs";
-import { Login } from "./pages/Account/Login";
+import { Login, action as loginAction } from "./pages/Account/Login";
 import {
   CreateAccount,
   action as createAccountAction,
@@ -12,7 +12,7 @@ import {
 import { AdminRoot } from "./pages/Admin/AdminRoot";
 import {
   InventoryData,
-  loader as dataLoader
+  loader as dataLoader,
 } from "./pages/Company/InventoryData";
 import {
   ViewProducts,
@@ -40,8 +40,10 @@ import {
   loader as productLoader,
 } from "./pages/Order/AssignOrder";
 // -------------------------------- \\
-
+import { checkAuthLoader } from "./util/auth";
+import AuthContext from "./store/authContext";
 import { SomeError } from "./pages/Error/SomeError";
+
 
 function App() {
   const router = createBrowserRouter(
@@ -53,17 +55,19 @@ function App() {
           {
             index: true,
             element: <Login />,
+            action: loginAction,
           },
           {
             path: "AboutUs",
-            element: <AboutUs/>
-          }
+            element: <AboutUs />,
+          },
         ],
       },
 
       {
         errorElement: <SomeError />,
         element: <AdminRoot />,
+        loader: checkAuthLoader,
         path: "Admin",
         children: [
           {
@@ -123,7 +127,11 @@ function App() {
     }
   );
 
-  return <RouterProvider router={router} />;
+  return (
+    <AuthContext>
+      <RouterProvider router={router} />
+    </AuthContext>
+  );
 }
 
 export default App;
